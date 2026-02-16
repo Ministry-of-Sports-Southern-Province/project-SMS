@@ -213,19 +213,19 @@ export default function ScoreEntryForm() {
               ))}
             </Select>
           </FormControl>
-          <FormControl sx={{ minWidth: 120 }}>
-            <InputLabel>{t('gender')}</InputLabel>
-            <Select value={gender} label={t('gender')} onChange={(e) => setGender(e.target.value as 'male' | 'female' | 'mixed')} disabled={isMixed}>
-              {isMixed ? (
-                <MenuItem value="mixed">{t('mixed')}</MenuItem>
-              ) : (
-                <>
-                  <MenuItem value="male">{t('male')}</MenuItem>
-                  <MenuItem value="female">{t('female')}</MenuItem>
-                </>
-              )}
-            </Select>
-          </FormControl>
+            <FormControl sx={{ minWidth: 120 }}>
+              <InputLabel>{t('gender')}</InputLabel>
+              <Select value={gender} label={t('gender')} onChange={(e) => setGender(e.target.value as 'male' | 'female' | 'mixed')} disabled={isMixed}>
+                {isMixed ? (
+                  <MenuItem value="mixed">{t('mixed')}</MenuItem>
+                ) : (
+                  [
+                    <MenuItem key="male" value="male">{t('male')}</MenuItem>,
+                    <MenuItem key="female" value="female">{t('female')}</MenuItem>,
+                  ]
+                )}
+              </Select>
+            </FormControl>
         </Box>
       </Paper>
 
