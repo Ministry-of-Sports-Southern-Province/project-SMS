@@ -257,6 +257,24 @@ router.post(
         return res.status(400).json({ error: 'Same person cannot win multiple places in the same event' });
       }
 
+      // Check for duplicate places for this event+gender
+      const places = filled.map((p) => p.place);
+      const placePlaceholders = places.map(() => '?').join(',');
+      const [existingPlaces] = await pool.execute(
+        `SELECT DISTINCT sep.place 
+         FROM score_entry_players sep 
+         JOIN score_entries se ON sep.score_entry_id = se.id 
+         WHERE se.event_id = ? AND se.gender = ? AND sep.place IN (${placePlaceholders})`,
+        [eventId, gender, ...places]
+      );
+      const existingPlaceNumbers = (existingPlaces as any[]).map((r) => r.place);
+      if (existingPlaceNumbers.length > 0) {
+        const sortedPlaces = existingPlaceNumbers.sort((a, b) => a - b);
+        return res.status(400).json({ 
+          error: `Place(s) ${sortedPlaces.join(', ')} already have entries for this event and gender. Edit or delete them in View entries.` 
+        });
+      }
+
       const conn = await pool.getConnection();
       try {
         await conn.beginTransaction();
@@ -347,6 +365,24 @@ router.put(
       const names = filled.map((p) => p.playerName.toLowerCase());
       if (names.length !== new Set(names).size) {
         return res.status(400).json({ error: 'Same person cannot win multiple places in the same event' });
+      }
+
+      // Check for duplicate places for this event+gender in other entries
+      const places = filled.map((p) => p.place);
+      const placePlaceholders = places.map(() => '?').join(',');
+      const [existingPlaces] = await pool.execute(
+        `SELECT DISTINCT sep.place 
+         FROM score_entry_players sep 
+         JOIN score_entries se ON sep.score_entry_id = se.id 
+         WHERE se.event_id = ? AND se.gender = ? AND se.id != ? AND sep.place IN (${placePlaceholders})`,
+        [eventId, gender, id, ...places]
+      );
+      const existingPlaceNumbers = (existingPlaces as any[]).map((r) => r.place);
+      if (existingPlaceNumbers.length > 0) {
+        const sortedPlaces = existingPlaceNumbers.sort((a, b) => a - b);
+        return res.status(400).json({ 
+          error: `Place(s) ${sortedPlaces.join(', ')} already exist for this event and gender in another entry.` 
+        });
       }
 
       const conn = await pool.getConnection();
