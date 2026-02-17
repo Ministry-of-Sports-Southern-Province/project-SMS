@@ -11,11 +11,13 @@ router.use(auth);
 
 const timeRegex = /^(\d{1,2}\.\d{2}\.\d{2}|\d{1,2}\.\d{2})$/;
 const distanceRegex = /^\d+(\.\d+)?m$/;
+const pointsRegex = /^\d+(\.\d{1,3})?$/;
 
 function validateRecord(value: string, format: string): boolean {
   if (!value) return true;
   if (format === 'time') return timeRegex.test(value.trim());
   if (format === 'distance') return distanceRegex.test(value.trim());
+  if (format === 'points') return pointsRegex.test(value.trim());
   return true;
 }
 
@@ -228,11 +230,30 @@ router.post(
 
     try {
       const [evt] = await pool.execute(
-        'SELECT erf.format FROM events e LEFT JOIN event_record_formats erf ON e.id = erf.event_id WHERE e.id = ?',
+        `SELECT e.is_mixed, e.gender_restriction, erf.format
+         FROM events e
+         LEFT JOIN event_record_formats erf ON e.id = erf.event_id
+         WHERE e.id = ?`,
         [eventId]
       );
       const evtRows = evt as any[];
-      const recordFormat = evtRows[0]?.format || 'time';
+      const eventInfo = evtRows[0];
+      if (!eventInfo) return res.status(400).json({ error: 'Invalid event. Please refresh and try again.' });
+
+      // Enforce gender restrictions for the selected event
+      if (eventInfo.is_mixed) {
+        if (gender !== 'mixed') return res.status(400).json({ error: 'This event is mixed. Gender must be mixed.' });
+      } else {
+        if (gender === 'mixed') return res.status(400).json({ error: 'This event is not mixed. Gender must be male or female.' });
+        if (eventInfo.gender_restriction === 'male' && gender !== 'male') {
+          return res.status(400).json({ error: 'This event is for male only.' });
+        }
+        if (eventInfo.gender_restriction === 'female' && gender !== 'female') {
+          return res.status(400).json({ error: 'This event is for female only.' });
+        }
+      }
+
+      const recordFormat = eventInfo.format || 'time';
 
       for (const p of filled) {
         if (p.record && !validateRecord(p.record, recordFormat)) {
@@ -338,11 +359,30 @@ router.put(
 
     try {
       const [evt] = await pool.execute(
-        'SELECT erf.format FROM events e LEFT JOIN event_record_formats erf ON e.id = erf.event_id WHERE e.id = ?',
+        `SELECT e.is_mixed, e.gender_restriction, erf.format
+         FROM events e
+         LEFT JOIN event_record_formats erf ON e.id = erf.event_id
+         WHERE e.id = ?`,
         [eventId]
       );
       const evtRows = evt as any[];
-      const recordFormat = evtRows[0]?.format || 'time';
+      const eventInfo = evtRows[0];
+      if (!eventInfo) return res.status(400).json({ error: 'Invalid event. Please refresh and try again.' });
+
+      // Enforce gender restrictions for the selected event
+      if (eventInfo.is_mixed) {
+        if (gender !== 'mixed') return res.status(400).json({ error: 'This event is mixed. Gender must be mixed.' });
+      } else {
+        if (gender === 'mixed') return res.status(400).json({ error: 'This event is not mixed. Gender must be male or female.' });
+        if (eventInfo.gender_restriction === 'male' && gender !== 'male') {
+          return res.status(400).json({ error: 'This event is for male only.' });
+        }
+        if (eventInfo.gender_restriction === 'female' && gender !== 'female') {
+          return res.status(400).json({ error: 'This event is for female only.' });
+        }
+      }
+
+      const recordFormat = eventInfo.format || 'time';
 
       for (const p of filled) {
         if (p.record && !validateRecord(p.record, recordFormat)) {

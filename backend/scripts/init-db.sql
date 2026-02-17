@@ -33,14 +33,15 @@ CREATE TABLE events (
     is_relay BOOLEAN DEFAULT FALSE,
     players_per_place INT DEFAULT 1,
     is_mixed BOOLEAN DEFAULT FALSE,
+    gender_restriction ENUM('male', 'female', 'both', 'mixed') NOT NULL DEFAULT 'both',
     FOREIGN KEY (sport_category_id) REFERENCES sport_categories(id)
 );
 
--- Event record format (time vs distance for validation)
+-- Event record format (time vs distance vs points for validation)
 CREATE TABLE event_record_formats (
     id INT AUTO_INCREMENT PRIMARY KEY,
     event_id INT NOT NULL,
-    format ENUM('time', 'distance') NOT NULL,
+    format ENUM('time', 'distance', 'points') NOT NULL,
     FOREIGN KEY (event_id) REFERENCES events(id)
 );
 
@@ -87,7 +88,8 @@ CREATE TABLE score_entry_players (
 
 -- Seed sport categories (A-01 only for now)
 INSERT INTO sport_categories (code, name) VALUES
-('A-01', 'ATHLETIC');
+('A-01', 'ATHLETIC'),
+('A-02', 'GYMNASTIC');
 
 -- Seed events - A-01 ATHLETIC (22 events)
 -- Running (time)
@@ -117,6 +119,20 @@ INSERT INTO events (sport_category_id, name, is_relay, players_per_place, is_mix
 (1, 'javelin throw', FALSE, 1, FALSE),
 (1, 'hammer throw', FALSE, 1, FALSE);
 
+-- Seed events - A-02 GYMNASTIC
+-- Both (male & female)
+INSERT INTO events (sport_category_id, name, is_relay, players_per_place, is_mixed, gender_restriction) VALUES
+(2, 'floor exercise', FALSE, 1, FALSE, 'both'),
+(2, 'vaulting table', FALSE, 1, FALSE, 'both'),
+-- Men only
+(2, 'high bar', FALSE, 1, FALSE, 'male'),
+(2, 'parallel bars', FALSE, 1, FALSE, 'male'),
+(2, 'pommel horse', FALSE, 1, FALSE, 'male'),
+(2, 'still rings', FALSE, 1, FALSE, 'male'),
+-- Women only
+(2, 'balance beam', FALSE, 1, FALSE, 'female'),
+(2, 'uneven bars', FALSE, 1, FALSE, 'female');
+
 -- Event record formats (time for running/relay, distance for jumps/throws)
 INSERT INTO event_record_formats (event_id, format)
 SELECT id, 'time' FROM events WHERE name IN (
@@ -129,6 +145,10 @@ SELECT id, 'distance' FROM events WHERE name IN (
     'high jump', 'long jump', 'triple jump', 'pole vault',
     'shot put', 'discus throw', 'javelin throw', 'hammer throw'
 );
+
+-- Gymnastics uses points/score
+INSERT INTO event_record_formats (event_id, format)
+SELECT id, 'points' FROM events WHERE sport_category_id = 2;
 
 -- Seed districts
 INSERT INTO districts (id, name) VALUES

@@ -17,15 +17,19 @@ interface Event {
   is_relay: boolean;
   players_per_place: number;
   is_mixed: boolean;
-  record_format: 'time' | 'distance';
+  gender_restriction?: 'male' | 'female' | 'both' | 'mixed';
+  record_format?: 'time' | 'distance' | 'points' | null;
 }
 
 const timeRegex = /^(\d{1,2}\.\d{2}\.\d{2}|\d{1,2}\.\d{2})$/;
 const distanceRegex = /^\d+(\.\d+)?m$/;
+const pointsRegex = /^\d+(\.\d{1,3})?$/;
 
-function validateRecord(value: string, format: 'time' | 'distance'): boolean {
+function validateRecord(value: string, format: 'time' | 'distance' | 'points'): boolean {
   if (!value.trim()) return true;
-  return format === 'time' ? timeRegex.test(value.trim()) : distanceRegex.test(value.trim());
+  if (format === 'time') return timeRegex.test(value.trim());
+  if (format === 'distance') return distanceRegex.test(value.trim());
+  return pointsRegex.test(value.trim());
 }
 
 function createEmptyPlayers(isRelay: boolean): PlayerInput[] {
@@ -64,7 +68,17 @@ export default function ScoreEntryForm() {
   const selectedEvent = events.find((e) => e.id === eventId);
   const isRelay = selectedEvent?.is_relay ?? false;
   const isMixed = selectedEvent?.is_mixed ?? false;
-  const recordFormat = (selectedEvent?.record_format || 'time') as 'time' | 'distance';
+  const recordFormat = (selectedEvent?.record_format || 'time') as 'time' | 'distance' | 'points';
+
+  const visibleEvents = events.filter((e) => {
+    if (e.is_mixed) return true;
+    if (gender === 'mixed') return false;
+    const r = e.gender_restriction || 'both';
+    if (r === 'both') return true;
+    if (r === 'male') return gender === 'male';
+    if (r === 'female') return gender === 'female';
+    return true;
+  });
 
   useEffect(() => {
     api<Category[]>('/sport-categories').then((cats) => {
@@ -98,6 +112,12 @@ export default function ScoreEntryForm() {
     setEventId(0);
     setGender('male');
   }, [categoryId]);
+
+  useEffect(() => {
+    if (eventId && !visibleEvents.some((e) => e.id === eventId)) {
+      setEventId(0);
+    }
+  }, [eventId, gender, events]);
 
   useEffect(() => {
     if (isMixed) {
@@ -201,15 +221,15 @@ export default function ScoreEntryForm() {
             <InputLabel>{t('category')}</InputLabel>
             <Select value={categoryId} label={t('category')} onChange={(e) => setCategoryId(Number(e.target.value))}>
               {categories.map((c) => (
-                <MenuItem key={c.id} value={c.id}>{c.code} - {c.name}</MenuItem>
+                <MenuItem key={c.id} value={c.id}>{c.code} - {t(c.name)}</MenuItem>
               ))}
             </Select>
           </FormControl>
           <FormControl sx={{ minWidth: 180 }}>
             <InputLabel>{t('event')}</InputLabel>
             <Select value={eventId} label={t('event')} onChange={(e) => setEventId(Number(e.target.value))} disabled={!categoryId}>
-              {events.map((e) => (
-                <MenuItem key={e.id} value={e.id}>{e.name}</MenuItem>
+              {visibleEvents.map((e) => (
+                <MenuItem key={e.id} value={e.id}>{t(e.name)}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -250,7 +270,14 @@ export default function ScoreEntryForm() {
             dsOfficesByDistrict={dsOfficesByDistrict}
             isRelay={isRelay}
             recordFormat={recordFormat}
-            recordLabel={t('record') + (recordFormat === 'time' ? ' (e.g. 12.05, 1.13.12)' : ' (e.g. 12m, 40.34m)')}
+            recordLabel={
+              t('record') +
+              (recordFormat === 'time'
+                ? ' (e.g. 12.05, 1.13.12)'
+                : recordFormat === 'distance'
+                  ? ' (e.g. 12m, 40.34m)'
+                  : ' (e.g. 13.500)')
+            }
           />
           <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
             <Button variant="outlined" onClick={() => handleSubmit(true)}>
@@ -266,8 +293,8 @@ export default function ScoreEntryForm() {
       {showPreview && (
         <Paper sx={{ p: 2, mb: 2 }}>
           <Typography variant="h6" gutterBottom>{t('preview')}</Typography>
-          <Typography>Category: {cat?.code} - {cat?.name}</Typography>
-          <Typography>Event: {evt?.name}, Gender: {gender}</Typography>
+          <Typography>{t('category')}: {cat?.code} - {cat ? t(cat.name) : ''}</Typography>
+          <Typography>{t('event')}: {evt ? t(evt.name) : ''}, {t('gender')}: {t(gender)}</Typography>
           <Typography variant="body2" color="text.secondary">Places to be saved: {getFilledPlayers().length}</Typography>
           {getFilledPlayers().slice(0, 8).map((p, i) => (
             <Typography key={i} variant="body2">{p.place}: {p.playerName} - {p.certificateNo}</Typography>

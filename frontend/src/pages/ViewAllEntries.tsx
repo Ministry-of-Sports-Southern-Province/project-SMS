@@ -78,6 +78,8 @@ export default function ViewAllEntries() {
 
   const loadRows = () => {
     const params = new URLSearchParams();
+
+    
     if (filters.districtId) params.set('districtId', filters.districtId);
     if (filters.dsOfficeId) params.set('dsOfficeId', filters.dsOfficeId);
     if (filters.gender) params.set('gender', filters.gender);
@@ -124,7 +126,7 @@ export default function ViewAllEntries() {
     {} as Record<number, { id: number; name: string }[]>
   );
 
-  const [editEvents, setEditEvents] = useState<{ id: number; name: string }[]>([]);
+  const [editEvents, setEditEvents] = useState<{ id: number; name: string; record_format?: 'time' | 'distance' | 'points' | null }[]>([]);
 
   const openEdit = async (id: number) => {
     setSelectedEntryId(id);
@@ -142,7 +144,9 @@ export default function ViewAllEntries() {
         record: p.record || '',
       }))
     );
-    api<{ id: number; name: string }[]>(`/events?categoryId=${detail.category_id}`).then(setEditEvents).catch(() => []);
+    api<{ id: number; name: string; record_format?: 'time' | 'distance' | 'points' | null }[]>(`/events?categoryId=${detail.category_id}`)
+      .then(setEditEvents)
+      .catch(() => []);
     setEditOpen(true);
   };
 
@@ -212,7 +216,7 @@ export default function ViewAllEntries() {
 
   const selectedEntry = entryDetail;
   const isRelay = selectedEntry?.is_relay ?? false;
-  const recordFormat = 'time' as const;
+  const recordFormat = ((editEvents.find((e) => e.id === editEventId)?.record_format || 'time') as 'time' | 'distance' | 'points');
 
   return (
     <Box>
@@ -279,7 +283,7 @@ export default function ViewAllEntries() {
             <Select value={filters.eventId} label={t('event')} onChange={(e) => setFilters((f) => ({ ...f, eventId: e.target.value }))} disabled={!filters.categoryId}>
               <MenuItem value="">All</MenuItem>
               {events.map((e) => (
-                <MenuItem key={e.id} value={String(e.id)}>{e.name}</MenuItem>
+                <MenuItem key={e.id} value={String(e.id)}>{t(e.name)}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -314,8 +318,8 @@ export default function ViewAllEntries() {
               <TableRow key={r.rowKey}>
                 <TableCell>{r.id}</TableCell>
                 <TableCell>{r.category_code}</TableCell>
-                <TableCell>{r.event_name}</TableCell>
-                <TableCell>{r.gender}</TableCell>
+                <TableCell>{t(r.event_name)}</TableCell>
+                <TableCell>{t(r.gender)}</TableCell>
                 <TableCell>{r.place}</TableCell>
                 <TableCell>{r.player_name}</TableCell>
                 <TableCell>{r.certificate_no}</TableCell>
@@ -345,7 +349,7 @@ export default function ViewAllEntries() {
                 <InputLabel>{t('event')}</InputLabel>
                 <Select value={editEventId} label={t('event')} onChange={(e) => setEditEventId(Number(e.target.value))}>
                   {editEvents.map((e) => (
-                    <MenuItem key={e.id} value={e.id}>{e.name}</MenuItem>
+                    <MenuItem key={e.id} value={e.id}>{t(e.name)}</MenuItem>
                   ))}
                 </Select>
               </FormControl>

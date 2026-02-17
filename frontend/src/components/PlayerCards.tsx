@@ -16,7 +16,7 @@ interface PlayerCardsProps {
   districts: { id: number; name: string }[];
   dsOfficesByDistrict: Record<number, { id: number; name: string }[]>;
   isRelay: boolean;
-  recordFormat: 'time' | 'distance';
+  recordFormat: 'time' | 'distance' | 'points';
   recordLabel: string;
 }
 
@@ -104,7 +104,13 @@ export default function PlayerCards({
                 label={recordLabel}
                 value={p.record}
                 onChange={(e) => updatePlayer(i, 'record', e.target.value)}
-                placeholder={recordFormat === 'time' ? 'e.g. 12.05 or 1.13.12' : 'e.g. 12m or 40.34m'}
+                placeholder={
+                  recordFormat === 'time'
+                    ? 'e.g. 12.05 or 1.13.12'
+                    : recordFormat === 'distance'
+                      ? 'e.g. 12m or 40.34m'
+                      : 'e.g. 13.500'
+                }
                 sx={{ mb: 0 }}
               />
             </CardContent>
