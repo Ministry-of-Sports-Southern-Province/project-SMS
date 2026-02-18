@@ -86,10 +86,11 @@ CREATE TABLE score_entry_players (
     CHECK (place IN (1, 2, 3))
 );
 
--- Seed sport categories (A-01 only for now)
+-- Seed sport categories
 INSERT INTO sport_categories (code, name) VALUES
 ('A-01', 'ATHLETIC'),
-('A-02', 'GYMNASTIC');
+('A-02', 'GYMNASTIC'),
+('A-03', 'SWIMMING');
 
 -- Seed events - A-01 ATHLETIC (22 events)
 -- Running (time)
@@ -133,6 +134,27 @@ INSERT INTO events (sport_category_id, name, is_relay, players_per_place, is_mix
 (2, 'balance beam', FALSE, 1, FALSE, 'female'),
 (2, 'uneven bars', FALSE, 1, FALSE, 'female');
 
+-- Seed events - A-03 SWIMMING (20 events, time format; 800m female only, 1500m male only)
+INSERT INTO events (sport_category_id, name, is_relay, players_per_place, is_mixed, gender_restriction) VALUES
+(3, '50m freestyle', FALSE, 1, FALSE, 'both'),
+(3, '50m breaststroke', FALSE, 1, FALSE, 'both'),
+(3, '50m backstroke', FALSE, 1, FALSE, 'both'),
+(3, '50m butterfly', FALSE, 1, FALSE, 'both'),
+(3, '100m freestyle', FALSE, 1, FALSE, 'both'),
+(3, '100m breaststroke', FALSE, 1, FALSE, 'both'),
+(3, '100m backstroke', FALSE, 1, FALSE, 'both'),
+(3, '100m butterfly', FALSE, 1, FALSE, 'both'),
+(3, '200m freestyle', FALSE, 1, FALSE, 'both'),
+(3, '200m breaststroke', FALSE, 1, FALSE, 'both'),
+(3, '200m backstroke', FALSE, 1, FALSE, 'both'),
+(3, '200m butterfly', FALSE, 1, FALSE, 'both'),
+(3, '400m freestyle', FALSE, 1, FALSE, 'both'),
+(3, '800m freestyle', FALSE, 1, FALSE, 'female'),
+(3, '1500m freestyle', FALSE, 1, FALSE, 'male'),
+(3, '200m individual medley', FALSE, 1, FALSE, 'both'),
+(3, '50x4 freestyle relay', TRUE, 4, FALSE, 'both'),
+(3, '50x4 medley relay', TRUE, 4, FALSE, 'both');
+
 -- Event record formats (time for running/relay, distance for jumps/throws)
 INSERT INTO event_record_formats (event_id, format)
 SELECT id, 'time' FROM events WHERE name IN (
@@ -149,6 +171,10 @@ SELECT id, 'distance' FROM events WHERE name IN (
 -- Gymnastics uses points/score
 INSERT INTO event_record_formats (event_id, format)
 SELECT id, 'points' FROM events WHERE sport_category_id = 2;
+
+-- Swimming uses time (e.g. 12.13, 3.05.53)
+INSERT INTO event_record_formats (event_id, format)
+SELECT id, 'time' FROM events WHERE sport_category_id = 3;
 
 -- Seed districts
 INSERT INTO districts (id, name) VALUES

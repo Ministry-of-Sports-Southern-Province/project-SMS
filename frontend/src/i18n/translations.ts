@@ -57,6 +57,7 @@ export const translations = {
       // Sport categories
       ATHLETIC: 'මලල ක්‍රීඩා',
       GYMNASTIC: 'ජිම්නාස්ටික්',
+      SWIMMING: 'පිහිනුම් ක්‍රීඩා',
 
       // A-01 ATHLETIC events
       '100m': '100 මීටර්',
@@ -90,6 +91,26 @@ export const translations = {
       'still rings': 'ස්ටිල් රින්ග්ස්',
       'balance beam': 'සමතුලිත පීලි',
       'uneven bars': 'අසමාන්තර දණ්ඩ',
+
+      // A-03 SWIMMING events
+      '50m freestyle': '50 මීටර් නිදහස්',
+      '50m breaststroke': '50 මීටර් බ්‍රෙස්ට්ස්ට්‍රෝක්',
+      '50m backstroke': '50 මීටර් බැක්ස්ට්‍රෝක්',
+      '50m butterfly': '50 මීටර් බටර්ෆ්ලයි',
+      '100m freestyle': '100 මීටර් නිදහස්',
+      '100m breaststroke': '100 මීටර් බ්‍රෙස්ට්ස්ට්‍රෝක්',
+      '100m backstroke': '100 මීටර් බැක්ස්ට්‍රෝක්',
+      '100m butterfly': '100 මීටර් බටර්ෆ්ලයි',
+      '200m freestyle': '200 මීටර් නිදහස්',
+      '200m breaststroke': '200 මීටර් බ්‍රෙස්ට්ස්ට්‍රෝක්',
+      '200m backstroke': '200 මීටර් බැක්ස්ට්‍රෝක්',
+      '200m butterfly': '200 මීටර් බටර්ෆ්ලයි',
+      '400m freestyle': '400 මීටර් නිදහස්',
+      '800m freestyle': '800 මීටර් නිදහස්',
+      '1500m freestyle': '1500 මීටර් නිදහස්',
+      '200m individual medley': '200 මීටර් තනි මෙඩ්ලි',
+      '50x4 freestyle relay': '50 මීටර් X 4 නිදහස් රිලේ',
+      '50x4 medley relay': '50 මීටර් X 4 මෙඩ්ලි රිලේ',
     },
   },
   en: {
@@ -150,6 +171,7 @@ export const translations = {
       // Sport categories
       ATHLETIC: 'Athletic',
       GYMNASTIC: 'Gymnastic',
+      SWIMMING: 'Swimming',
 
       // A-01 ATHLETIC events
       '100m': '100m',
@@ -183,6 +205,26 @@ export const translations = {
       'still rings': 'Still rings',
       'balance beam': 'Balance beam',
       'uneven bars': 'Uneven bars',
+
+      // A-03 SWIMMING events
+      '50m freestyle': '50m Freestyle',
+      '50m breaststroke': '50m Breaststroke',
+      '50m backstroke': '50m Backstroke',
+      '50m butterfly': '50m Butterfly',
+      '100m freestyle': '100m Freestyle',
+      '100m breaststroke': '100m Breaststroke',
+      '100m backstroke': '100m Backstroke',
+      '100m butterfly': '100m Butterfly',
+      '200m freestyle': '200m Freestyle',
+      '200m breaststroke': '200m Breaststroke',
+      '200m backstroke': '200m Backstroke',
+      '200m butterfly': '200m Butterfly',
+      '400m freestyle': '400m Freestyle',
+      '800m freestyle': '800m Freestyle',
+      '1500m freestyle': '1500m Freestyle',
+      '200m individual medley': '200m Individual Medley',
+      '50x4 freestyle relay': '50m X 4 Freestyle Relay',
+      '50x4 medley relay': '50m X 4 Medley Relay',
     },
   },
   ta: {
@@ -243,6 +285,7 @@ export const translations = {
       // Sport categories
       ATHLETIC: 'தடகளம்',
       GYMNASTIC: 'ஜிம்னாஸ்டிக்ஸ்',
+      SWIMMING: 'நீச்சல்',
 
       // A-01 ATHLETIC events
       '100m': '100 மீ',
@@ -276,6 +319,26 @@ export const translations = {
       'still rings': 'ஸ்டில் ரிங்ஸ்',
       'balance beam': 'சமநிலை கம்பி',
       'uneven bars': 'ஒற்றுமையற்ற தண்டுகள்',
+
+      // A-03 SWIMMING events
+      '50m freestyle': '50 மீ சுதந்திரம்',
+      '50m breaststroke': '50 மீ மார்பு',
+      '50m backstroke': '50 மீ முதுகு',
+      '50m butterfly': '50 மீ பட்டாம்பூச்சி',
+      '100m freestyle': '100 மீ சுதந்திரம்',
+      '100m breaststroke': '100 மீ மார்பு',
+      '100m backstroke': '100 மீ முதுகு',
+      '100m butterfly': '100 மீ பட்டாம்பூச்சி',
+      '200m freestyle': '200 மீ சுதந்திரம்',
+      '200m breaststroke': '200 மீ மார்பு',
+      '200m backstroke': '200 மீ முதுகு',
+      '200m butterfly': '200 மீ பட்டாம்பூச்சி',
+      '400m freestyle': '400 மீ சுதந்திரம்',
+      '800m freestyle': '800 மீ சுதந்திரம்',
+      '1500m freestyle': '1500 மீ சுதந்திரம்',
+      '200m individual medley': '200 மீ தனி மெட்லி',
+      '50x4 freestyle relay': '50 மீ X 4 சுதந்திர ரிலே',
+      '50x4 medley relay': '50 மீ X 4 மெட்லி ரிலே',
     },
   },
 };
