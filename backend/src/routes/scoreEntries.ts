@@ -5,6 +5,7 @@ import { auth, AuthRequest } from '../middleware/auth';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import fs from 'fs';
 
 const router = Router();
 router.use(auth);
@@ -228,6 +229,25 @@ router.post(
       return res.status(400).json({ error: 'At least one place must be filled with player name, certificate no, district and DS office' });
     }
 
+    // #region agent log
+    try {
+      const perPlace: Record<number, number> = {};
+      for (const p of filled) perPlace[p.place] = (perPlace[p.place] || 0) + 1;
+      const logEntry = JSON.stringify({
+        sessionId: '521299',
+        runId: 'pre',
+        hypothesisId: 'H_backend_filled',
+        location: 'scoreEntries.post:filled',
+        message: 'Incoming POST /score-entries filled players',
+        data: { eventId, gender, filledCount: filled.length, perPlace },
+        timestamp: Date.now(),
+      });
+      fs.appendFileSync('debug-521299.log', logEntry + '\n');
+    } catch {
+      // ignore logging errors
+    }
+    // #endregion agent log
+
     try {
       const [evt] = await pool.execute(
         `SELECT e.is_mixed, e.gender_restriction, erf.format
@@ -253,11 +273,14 @@ router.post(
         }
       }
 
-      const recordFormat = eventInfo.format || 'time';
+      const recordFormat = eventInfo.format;
 
-      for (const p of filled) {
-        if (p.record && !validateRecord(p.record, recordFormat)) {
-          return res.status(400).json({ error: `Invalid record format for ${p.playerName}` });
+      // Only validate record if format is specified (team games have null format)
+      if (recordFormat) {
+        for (const p of filled) {
+          if (p.record && !validateRecord(p.record, recordFormat)) {
+            return res.status(400).json({ error: `Invalid record format for ${p.playerName}` });
+          }
         }
       }
 
@@ -270,11 +293,43 @@ router.post(
       const existing = (existingCerts as any[]).map((r) => r.certificate_no);
       const duplicates = certs.filter((c) => existing.includes(c));
       if (duplicates.length) {
+        // #region agent log
+        try {
+          const logEntry = JSON.stringify({
+            sessionId: '521299',
+            runId: 'pre',
+            hypothesisId: 'H_backend_dup_cert',
+            location: 'scoreEntries.post:duplicateCerts',
+            message: 'Duplicate certificate numbers detected',
+            data: { eventId, gender, duplicates },
+            timestamp: Date.now(),
+          });
+          fs.appendFileSync('debug-521299.log', logEntry + '\n');
+        } catch {
+          // ignore logging errors
+        }
+        // #endregion agent log
         return res.status(400).json({ error: `Duplicate certificate numbers: ${duplicates.join(', ')}` });
       }
 
       const names = filled.map((p) => p.playerName.toLowerCase());
       if (names.length !== new Set(names).size) {
+        // #region agent log
+        try {
+          const logEntry = JSON.stringify({
+            sessionId: '521299',
+            runId: 'pre',
+            hypothesisId: 'H_backend_dup_name',
+            location: 'scoreEntries.post:duplicateNames',
+            message: 'Same person appears multiple times in payload',
+            data: { eventId, gender, names },
+            timestamp: Date.now(),
+          });
+          fs.appendFileSync('debug-521299.log', logEntry + '\n');
+        } catch {
+          // ignore logging errors
+        }
+        // #endregion agent log
         return res.status(400).json({ error: 'Same person cannot win multiple places in the same event' });
       }
 
@@ -291,6 +346,22 @@ router.post(
       const existingPlaceNumbers = (existingPlaces as any[]).map((r) => r.place);
       if (existingPlaceNumbers.length > 0) {
         const sortedPlaces = existingPlaceNumbers.sort((a, b) => a - b);
+        // #region agent log
+        try {
+          const logEntry = JSON.stringify({
+            sessionId: '521299',
+            runId: 'pre',
+            hypothesisId: 'H_backend_dup_place',
+            location: 'scoreEntries.post:duplicatePlaces',
+            message: 'Duplicate places already exist in DB for this event+gender',
+            data: { eventId, gender, placesRequested: places, existingPlaceNumbers: sortedPlaces },
+            timestamp: Date.now(),
+          });
+          fs.appendFileSync('debug-521299.log', logEntry + '\n');
+        } catch {
+          // ignore logging errors
+        }
+        // #endregion agent log
         return res.status(400).json({ 
           error: `Place(s) ${sortedPlaces.join(', ')} already have entries for this event and gender. Edit or delete them in View entries.` 
         });
@@ -382,11 +453,14 @@ router.put(
         }
       }
 
-      const recordFormat = eventInfo.format || 'time';
+      const recordFormat = eventInfo.format;
 
-      for (const p of filled) {
-        if (p.record && !validateRecord(p.record, recordFormat)) {
-          return res.status(400).json({ error: `Invalid record format for ${p.playerName}` });
+      // Only validate record if format is specified (team games have null format)
+      if (recordFormat) {
+        for (const p of filled) {
+          if (p.record && !validateRecord(p.record, recordFormat)) {
+            return res.status(400).json({ error: `Invalid record format for ${p.playerName}` });
+          }
         }
       }
 

@@ -15,8 +15,8 @@ interface PlayerCardsProps {
   onChange: (players: PlayerInput[]) => void;
   districts: { id: number; name: string }[];
   dsOfficesByDistrict: Record<number, { id: number; name: string }[]>;
-  isRelay: boolean;
-  recordFormat: 'time' | 'distance' | 'points';
+  playersPerPlace: number;
+  recordFormat: 'time' | 'distance' | 'points' | null;
   recordLabel: string;
 }
 
@@ -25,7 +25,7 @@ export default function PlayerCards({
   onChange,
   districts,
   dsOfficesByDistrict,
-  isRelay,
+  playersPerPlace,
   recordFormat,
   recordLabel,
 }: PlayerCardsProps) {
@@ -51,7 +51,7 @@ export default function PlayerCards({
             <CardContent>
               <Box sx={{ fontSize: '0.875rem', color: 'text.secondary', mb: 1 }}>
                 {t('place')} {placeLabels[p.place] || p.place}
-                {isRelay && ` - Player ${(i % 4) + 1}`}
+                {playersPerPlace > 1 && ` - Player ${(i % playersPerPlace) + 1}`}
               </Box>
               <TextField
                 fullWidth
@@ -98,21 +98,23 @@ export default function PlayerCards({
                   ))}
                 </Select>
               </FormControl>
-              <TextField
-                fullWidth
-                size="small"
-                label={recordLabel}
-                value={p.record}
-                onChange={(e) => updatePlayer(i, 'record', e.target.value)}
-                placeholder={
-                  recordFormat === 'time'
-                    ? 'e.g. 12.05 or 1.13.12'
-                    : recordFormat === 'distance'
-                      ? 'e.g. 12m or 40.34m'
-                      : 'e.g. 13.500'
-                }
-                sx={{ mb: 0 }}
-              />
+              {recordFormat && (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label={recordLabel}
+                  value={p.record}
+                  onChange={(e) => updatePlayer(i, 'record', e.target.value)}
+                  placeholder={
+                    recordFormat === 'time'
+                      ? 'e.g. 12.05 or 1.13.12'
+                      : recordFormat === 'distance'
+                        ? 'e.g. 12m or 40.34m'
+                        : 'e.g. 13.500'
+                  }
+                  sx={{ mb: 0 }}
+                />
+              )}
             </CardContent>
           </Card>
         </Grid>

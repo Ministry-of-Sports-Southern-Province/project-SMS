@@ -8,7 +8,7 @@ router.get('/', async (req: Request, res: Response) => {
   if (!categoryId) return res.status(400).json({ error: 'categoryId required' });
 
   const [rows] = await pool.execute(
-    `SELECT e.id, e.name, e.is_relay, e.players_per_place, e.is_mixed, e.gender_restriction, erf.format as record_format
+    `SELECT e.id, e.name, e.is_relay, e.players_per_place, e.is_mixed, e.gender_restriction, e.places_count, erf.format as record_format
      FROM events e
      LEFT JOIN event_record_formats erf ON e.id = erf.event_id
      WHERE e.sport_category_id = ?

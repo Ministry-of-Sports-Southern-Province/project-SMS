@@ -25,7 +25,7 @@ CREATE TABLE sport_categories (
     name VARCHAR(100) NOT NULL
 );
 
--- Events (with is_relay, players_per_place, is_mixed for scaling)
+-- Events (with is_relay, players_per_place, is_mixed, places_count for scaling)
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sport_category_id INT NOT NULL,
@@ -34,6 +34,7 @@ CREATE TABLE events (
     players_per_place INT DEFAULT 1,
     is_mixed BOOLEAN DEFAULT FALSE,
     gender_restriction ENUM('male', 'female', 'both', 'mixed') NOT NULL DEFAULT 'both',
+    places_count INT NOT NULL DEFAULT 3,
     FOREIGN KEY (sport_category_id) REFERENCES sport_categories(id)
 );
 
@@ -90,7 +91,8 @@ CREATE TABLE score_entry_players (
 INSERT INTO sport_categories (code, name) VALUES
 ('A-01', 'ATHLETIC'),
 ('A-02', 'GYMNASTIC'),
-('A-03', 'SWIMMING');
+('A-03', 'SWIMMING'),
+('B', 'TEAM_GAMES');
 
 -- Seed events - A-01 ATHLETIC (22 events)
 -- Running (time)
@@ -175,6 +177,35 @@ SELECT id, 'points' FROM events WHERE sport_category_id = 2;
 -- Swimming uses time (e.g. 12.13, 3.05.53)
 INSERT INTO event_record_formats (event_id, format)
 SELECT id, 'time' FROM events WHERE sport_category_id = 3;
+
+-- Seed events - B TEAM GAMES (25 events B-01 through B-18, no record formats)
+INSERT INTO events (sport_category_id, name, is_relay, players_per_place, is_mixed, gender_restriction, places_count) VALUES
+(4, 'B-01', FALSE, 1, FALSE, 'both', 3),
+(4, 'B-02', FALSE, 1, FALSE, 'both', 3),
+(4, 'B-03', FALSE, 10, FALSE, 'both', 2),
+(4, 'B-04-1', FALSE, 7, FALSE, 'both', 2),
+(4, 'B-04-2', FALSE, 1, FALSE, 'both', 2),
+(4, 'B-04-3', FALSE, 2, FALSE, 'both', 2),
+(4, 'B-04-4', FALSE, 2, TRUE, 'mixed', 2),
+(4, 'B-05', FALSE, 12, FALSE, 'both', 2),
+(4, 'B-06', FALSE, 6, FALSE, 'both', 2),
+(4, 'B-07', FALSE, 2, FALSE, 'both', 2),
+(4, 'B-08', FALSE, 13, FALSE, 'both', 2),
+(4, 'B-09', FALSE, 20, FALSE, 'both', 2),
+(4, 'B-10', FALSE, 20, FALSE, 'both', 2),
+(4, 'B-11', FALSE, 16, FALSE, 'both', 2),
+(4, 'B-12', FALSE, 18, FALSE, 'both', 2),
+(4, 'B-13', FALSE, 12, FALSE, 'both', 2),
+(4, 'B-14', FALSE, 12, FALSE, 'female', 2),
+(4, 'B-15', FALSE, 12, FALSE, 'both', 2),
+(4, 'B-16', FALSE, 15, FALSE, 'both', 2),
+(4, 'B-17-1', FALSE, 5, FALSE, 'both', 2),
+(4, 'B-17-2', FALSE, 1, FALSE, 'both', 2),
+(4, 'B-17-3', FALSE, 2, FALSE, 'both', 2),
+(4, 'B-17-4', FALSE, 2, TRUE, 'mixed', 2),
+(4, 'B-18', FALSE, 14, FALSE, 'both', 2);
+
+-- Note: Team games (B-01 through B-18) do NOT have record formats (no time/distance/points records)
 
 -- Seed districts
 INSERT INTO districts (id, name) VALUES

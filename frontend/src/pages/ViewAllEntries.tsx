@@ -48,6 +48,7 @@ interface EntryDetail {
   event_name: string;
   is_relay: boolean;
   players_per_place: number;
+  places_count?: number;
   is_mixed: boolean;
   category_id: number;
   players: { id: number; place: number; player_name: string; certificate_no: string; ds_office_id: number; district_id: number; record: string }[];
@@ -144,7 +145,7 @@ export default function ViewAllEntries() {
         record: p.record || '',
       }))
     );
-    api<{ id: number; name: string; record_format?: 'time' | 'distance' | 'points' | null }[]>(`/events?categoryId=${detail.category_id}`)
+    api<{ id: number; name: string; players_per_place?: number; places_count?: number; record_format?: 'time' | 'distance' | 'points' | null }[]>(`/events?categoryId=${detail.category_id}`)
       .then(setEditEvents)
       .catch(() => []);
     setEditOpen(true);
@@ -215,8 +216,9 @@ export default function ViewAllEntries() {
   const groupedRows = sortedRows.map((r, i) => ({ ...r, rowKey: `${r.id}-${i}-${r.certificate_no}` }));
 
   const selectedEntry = entryDetail;
-  const isRelay = selectedEntry?.is_relay ?? false;
-  const recordFormat = ((editEvents.find((e) => e.id === editEventId)?.record_format || 'time') as 'time' | 'distance' | 'points');
+  const editEvent = editEvents.find((e) => e.id === editEventId);
+  const playersPerPlace = editEvent?.players_per_place ?? selectedEntry?.players_per_place ?? 1;
+  const recordFormat = editEvent?.record_format ?? null;
 
   return (
     <Box>
@@ -366,9 +368,9 @@ export default function ViewAllEntries() {
                 onChange={setEditPlayers}
                 districts={districts}
                 dsOfficesByDistrict={dsOfficesByDistrict}
-                isRelay={isRelay}
+                playersPerPlace={playersPerPlace}
                 recordFormat={recordFormat}
-                recordLabel={t('record')}
+                recordLabel={recordFormat ? t('record') : ''}
               />
             </Box>
           )}

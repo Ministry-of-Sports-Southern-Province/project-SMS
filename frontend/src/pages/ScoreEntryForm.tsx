@@ -18,6 +18,7 @@ interface Event {
   players_per_place: number;
   is_mixed: boolean;
   gender_restriction?: 'male' | 'female' | 'both' | 'mixed';
+  places_count?: number;
   record_format?: 'time' | 'distance' | 'points' | null;
 }
 
@@ -32,13 +33,13 @@ function validateRecord(value: string, format: 'time' | 'distance' | 'points'): 
   return pointsRegex.test(value.trim());
 }
 
-function createEmptyPlayers(isRelay: boolean): PlayerInput[] {
-  const places = [1, 2, 3];
-  const count = isRelay ? 12 : 3;
+function createEmptyPlayers(placesCount: number, playersPerPlace: number): PlayerInput[] {
+  const totalSlots = placesCount * playersPerPlace;
   const result: PlayerInput[] = [];
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < totalSlots; i++) {
+    const place = Math.floor(i / playersPerPlace) + 1;
     result.push({
-      place: isRelay ? places[Math.floor(i / 4)]! : places[i]!,
+      place,
       playerName: '',
       certificateNo: '',
       districtId: 0,
@@ -59,7 +60,7 @@ export default function ScoreEntryForm() {
   const [categoryId, setCategoryId] = useState<number>(0);
   const [eventId, setEventId] = useState<number>(0);
   const [gender, setGender] = useState<'male' | 'female' | 'mixed'>('male');
-  const [players, setPlayers] = useState<PlayerInput[]>(createEmptyPlayers(false));
+  const [players, setPlayers] = useState<PlayerInput[]>(createEmptyPlayers(3, 1));
   const [success, setSuccess] = useState(false);
   const [savedId, setSavedId] = useState<number | null>(null);
   const [error, setError] = useState('');
@@ -68,7 +69,9 @@ export default function ScoreEntryForm() {
   const selectedEvent = events.find((e) => e.id === eventId);
   const isRelay = selectedEvent?.is_relay ?? false;
   const isMixed = selectedEvent?.is_mixed ?? false;
-  const recordFormat = (selectedEvent?.record_format || 'time') as 'time' | 'distance' | 'points';
+  const placesCount = selectedEvent?.places_count ?? 3;
+  const playersPerPlace = selectedEvent?.players_per_place ?? 1;
+  const recordFormat = selectedEvent?.record_format ?? null;
 
   const visibleEvents = events.filter((e) => {
     if (e.is_mixed) return true;
@@ -128,8 +131,8 @@ export default function ScoreEntryForm() {
   }, [eventId, isMixed]);
 
   useEffect(() => {
-    setPlayers(createEmptyPlayers(isRelay));
-  }, [eventId, isRelay]);
+    setPlayers(createEmptyPlayers(placesCount, playersPerPlace));
+  }, [eventId, placesCount, playersPerPlace]);
 
   const dsOfficesByDistrict: Record<number, { id: number; name: string }[]> = districts.reduce(
     (acc, d) => {
@@ -157,9 +160,33 @@ export default function ScoreEntryForm() {
     if (filled.length === 0) {
       return t('required') + ': ' + t('playerName') + ', ' + t('certNo') + ', ' + t('district') + ', ' + t('dsOffice') + ' (at least one place)';
     }
-    for (const p of filled) {
-      if (p.record && !validateRecord(p.record, recordFormat)) return t('invalidRecord');
+    // Only validate record if format is specified (team games have null format)
+    if (recordFormat) {
+      for (const p of filled) {
+        if (p.record && !validateRecord(p.record, recordFormat)) return t('invalidRecord');
+      }
     }
+
+    // #region agent log
+    try {
+      const perPlace: Record<number, number> = {};
+      for (const p of filled) perPlace[p.place] = (perPlace[p.place] || 0) + 1;
+      fetch('http://127.0.0.1:7243/ingest/16d23f38-11c3-48ce-8271-621ee55c36ff', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '521299' },
+        body: JSON.stringify({
+          sessionId: '521299',
+          runId: 'pre',
+          hypothesisId: 'H_validate_counts',
+          location: 'ScoreEntryForm.tsx:validate',
+          message: 'Validate filled players per place',
+          data: { eventId, gender, placesCount, playersPerPlace, filledCount: filled.length, perPlace },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+    } catch { /* ignore */ }
+    // #endregion agent log
+
     const names = filled.map((p) => p.playerName.toLowerCase());
     if (new Set(names).size !== names.length) return t('noDuplicatePerson');
     return null;
@@ -167,6 +194,24 @@ export default function ScoreEntryForm() {
 
   const handleSubmit = async (toPreview: boolean) => {
     setError('');
+    // #region agent log
+    try {
+      fetch('http://127.0.0.1:7243/ingest/16d23f38-11c3-48ce-8271-621ee55c36ff', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '521299' },
+        body: JSON.stringify({
+          sessionId: '521299',
+          runId: 'pre',
+          hypothesisId: 'H_submit_state',
+          location: 'ScoreEntryForm.tsx:handleSubmit',
+          message: 'Submit clicked (before validate)',
+          data: { toPreview, categoryId, eventId, gender, placesCount, playersPerPlace, recordFormat },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+    } catch { /* ignore */ }
+    // #endregion agent log
+
     const err = validate();
     if (err) {
       setError(err);
@@ -183,10 +228,47 @@ export default function ScoreEntryForm() {
         gender,
         players: filled,
       };
+      // #region agent log
+      try {
+        const perPlace: Record<number, number> = {};
+        for (const p of filled) perPlace[p.place] = (perPlace[p.place] || 0) + 1;
+        fetch('http://127.0.0.1:7243/ingest/16d23f38-11c3-48ce-8271-621ee55c36ff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '521299' },
+          body: JSON.stringify({
+            sessionId: '521299',
+            runId: 'pre',
+            hypothesisId: 'H_payload_shape',
+            location: 'ScoreEntryForm.tsx:handleSubmit',
+            message: 'Payload about to POST /score-entries',
+            data: { eventId, gender, filledCount: filled.length, perPlace },
+            timestamp: Date.now(),
+          }),
+        }).catch(() => {});
+      } catch { /* ignore */ }
+      // #endregion agent log
+
       const res = await api<{ id: number }>('/score-entries', { method: 'POST', body: JSON.stringify(payload) });
       setSavedId(res.id);
       setSuccess(true);
     } catch (err) {
+      // #region agent log
+      try {
+        fetch('http://127.0.0.1:7243/ingest/16d23f38-11c3-48ce-8271-621ee55c36ff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '521299' },
+          body: JSON.stringify({
+            sessionId: '521299',
+            runId: 'pre',
+            hypothesisId: 'H_api_error',
+            location: 'ScoreEntryForm.tsx:handleSubmit',
+            message: 'POST /score-entries failed',
+            data: { eventId, gender, error: err instanceof Error ? err.message : String(err) },
+            timestamp: Date.now(),
+          }),
+        }).catch(() => {});
+      } catch { /* ignore */ }
+      // #endregion agent log
       setError(err instanceof Error ? err.message : 'Failed');
     }
   };
@@ -195,7 +277,7 @@ export default function ScoreEntryForm() {
     setSuccess(false);
     setSavedId(null);
     setShowPreview(false);
-    setPlayers(createEmptyPlayers(isRelay));
+    setPlayers(createEmptyPlayers(placesCount, playersPerPlace));
     setError('');
   };
 
@@ -268,15 +350,17 @@ export default function ScoreEntryForm() {
             onChange={setPlayers}
             districts={districts}
             dsOfficesByDistrict={dsOfficesByDistrict}
-            isRelay={isRelay}
+            playersPerPlace={playersPerPlace}
             recordFormat={recordFormat}
             recordLabel={
-              t('record') +
-              (recordFormat === 'time'
-                ? ' (e.g. 12.05, 1.13.12)'
-                : recordFormat === 'distance'
-                  ? ' (e.g. 12m, 40.34m)'
-                  : ' (e.g. 13.500)')
+              recordFormat
+                ? t('record') +
+                  (recordFormat === 'time'
+                    ? ' (e.g. 12.05, 1.13.12)'
+                    : recordFormat === 'distance'
+                      ? ' (e.g. 12m, 40.34m)'
+                      : ' (e.g. 13.500)')
+                : t('record')
             }
           />
           <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>

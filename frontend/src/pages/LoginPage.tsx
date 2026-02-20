@@ -112,9 +112,11 @@ function ScoreTrackLogo({ color = 'hsl(210, 98%, 60%)' }) {
           fontFamily: 'inherit',
         }}
       >
-        ScoreTrack
+        Player Score System
       </Typography>
+      
     </Box>
+    
   );
 }
 
