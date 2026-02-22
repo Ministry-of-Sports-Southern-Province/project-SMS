@@ -333,38 +333,40 @@ router.post(
         return res.status(400).json({ error: 'Same person cannot win multiple places in the same event' });
       }
 
-      // Check for duplicate places for this event+gender
-      const places = filled.map((p) => p.place);
-      const placePlaceholders = places.map(() => '?').join(',');
-      const [existingPlaces] = await pool.execute(
-        `SELECT DISTINCT sep.place 
-         FROM score_entry_players sep 
-         JOIN score_entries se ON sep.score_entry_id = se.id 
-         WHERE se.event_id = ? AND se.gender = ? AND sep.place IN (${placePlaceholders})`,
-        [eventId, gender, ...places]
-      );
-      const existingPlaceNumbers = (existingPlaces as any[]).map((r) => r.place);
-      if (existingPlaceNumbers.length > 0) {
-        const sortedPlaces = existingPlaceNumbers.sort((a, b) => a - b);
-        // #region agent log
-        try {
-          const logEntry = JSON.stringify({
-            sessionId: '521299',
-            runId: 'pre',
-            hypothesisId: 'H_backend_dup_place',
-            location: 'scoreEntries.post:duplicatePlaces',
-            message: 'Duplicate places already exist in DB for this event+gender',
-            data: { eventId, gender, placesRequested: places, existingPlaceNumbers: sortedPlaces },
-            timestamp: Date.now(),
+      // Check for duplicate places for this event+gender (skip for team games which allow multiple players per place)
+      if (recordFormat !== null) {
+        const places = filled.map((p) => p.place);
+        const placePlaceholders = places.map(() => '?').join(',');
+        const [existingPlaces] = await pool.execute(
+          `SELECT DISTINCT sep.place
+           FROM score_entry_players sep
+           JOIN score_entries se ON sep.score_entry_id = se.id
+           WHERE se.event_id = ? AND se.gender = ? AND sep.place IN (${placePlaceholders})`,
+          [eventId, gender, ...places]
+        );
+        const existingPlaceNumbers = (existingPlaces as any[]).map((r) => r.place);
+        if (existingPlaceNumbers.length > 0) {
+          const sortedPlaces = existingPlaceNumbers.sort((a, b) => a - b);
+          // #region agent log
+          try {
+            const logEntry = JSON.stringify({
+              sessionId: '521299',
+              runId: 'pre',
+              hypothesisId: 'H_backend_dup_place',
+              location: 'scoreEntries.post:duplicatePlaces',
+              message: 'Duplicate places already exist in DB for this event+gender',
+              data: { eventId, gender, placesRequested: places, existingPlaceNumbers: sortedPlaces },
+              timestamp: Date.now(),
+            });
+            fs.appendFileSync('debug-521299.log', logEntry + '\n');
+          } catch {
+            // ignore logging errors
+          }
+          // #endregion agent log
+          return res.status(400).json({
+            error: `Place(s) ${sortedPlaces.join(', ')} already have entries for this event and gender. Edit or delete them in View entries.`
           });
-          fs.appendFileSync('debug-521299.log', logEntry + '\n');
-        } catch {
-          // ignore logging errors
         }
-        // #endregion agent log
-        return res.status(400).json({ 
-          error: `Place(s) ${sortedPlaces.join(', ')} already have entries for this event and gender. Edit or delete them in View entries.` 
-        });
       }
 
       const conn = await pool.getConnection();
@@ -481,22 +483,24 @@ router.put(
         return res.status(400).json({ error: 'Same person cannot win multiple places in the same event' });
       }
 
-      // Check for duplicate places for this event+gender in other entries
-      const places = filled.map((p) => p.place);
-      const placePlaceholders = places.map(() => '?').join(',');
-      const [existingPlaces] = await pool.execute(
-        `SELECT DISTINCT sep.place 
-         FROM score_entry_players sep 
-         JOIN score_entries se ON sep.score_entry_id = se.id 
-         WHERE se.event_id = ? AND se.gender = ? AND se.id != ? AND sep.place IN (${placePlaceholders})`,
-        [eventId, gender, id, ...places]
-      );
-      const existingPlaceNumbers = (existingPlaces as any[]).map((r) => r.place);
-      if (existingPlaceNumbers.length > 0) {
-        const sortedPlaces = existingPlaceNumbers.sort((a, b) => a - b);
-        return res.status(400).json({ 
-          error: `Place(s) ${sortedPlaces.join(', ')} already exist for this event and gender in another entry.` 
-        });
+      // Check for duplicate places for this event+gender in other entries (skip for team games which allow multiple players per place)
+      if (recordFormat !== null) {
+        const places = filled.map((p) => p.place);
+        const placePlaceholders = places.map(() => '?').join(',');
+        const [existingPlaces] = await pool.execute(
+          `SELECT DISTINCT sep.place
+           FROM score_entry_players sep
+           JOIN score_entries se ON sep.score_entry_id = se.id
+           WHERE se.event_id = ? AND se.gender = ? AND se.id != ? AND sep.place IN (${placePlaceholders})`,
+          [eventId, gender, id, ...places]
+        );
+        const existingPlaceNumbers = (existingPlaces as any[]).map((r) => r.place);
+        if (existingPlaceNumbers.length > 0) {
+          const sortedPlaces = existingPlaceNumbers.sort((a, b) => a - b);
+          return res.status(400).json({
+            error: `Place(s) ${sortedPlaces.join(', ')} already exist for this event and gender in another entry.`
+          });
+        }
       }
 
       const conn = await pool.getConnection();
