@@ -106,7 +106,7 @@ function ScoreTrackLogo({ color = 'hsl(210, 98%, 60%)' }) {
       <Typography
         sx={{
           fontWeight: 700,
-          fontSize: '1.1rem',
+          fontSize: '1.9rem',
           color,
           letterSpacing: '-0.015em',
           fontFamily: 'inherit',
