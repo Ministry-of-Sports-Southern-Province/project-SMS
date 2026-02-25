@@ -1,0 +1,1 @@
+this will contain failures of this project ,include to-do list and self analysis
