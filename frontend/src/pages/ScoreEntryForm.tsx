@@ -47,6 +47,7 @@ function createEmptyPlayers(placesCount: number, playersPerPlace: number): Playe
       record: '',
     });
   }
+ 
   return result;
 }
 
