@@ -1,6 +1,6 @@
 # Southern Province Sports Score Management System
 
-Web-based system for the Department of Sports - Southern Province (Sri Lanka) to record and manage provincial sports event scores.
+Web-based system for the Department of Sports - Southern Province (Sri Lanka) to record and manage provincial sports event scores
 
 ## Tech Stack
 
