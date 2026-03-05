@@ -80,14 +80,16 @@ export default function ViewAllEntries() {
   const loadRows = () => {
     const params = new URLSearchParams();
 
-    
     if (filters.districtId) params.set('districtId', filters.districtId);
     if (filters.dsOfficeId) params.set('dsOfficeId', filters.dsOfficeId);
     if (filters.gender) params.set('gender', filters.gender);
     if (filters.categoryId) params.set('categoryId', filters.categoryId);
     if (filters.eventId) params.set('eventId', filters.eventId);
     if (filters.search) params.set('search', filters.search);
-    api<EntryRow[]>(`/score-entries?${params}`).then(setRows).catch(console.error);
+
+    const queryString = params.toString();
+    const url = queryString ? `/score-entries?${queryString}` : '/score-entries';
+    api<EntryRow[]>(url).then(setRows).catch(console.error);
   };
 
   useEffect(() => {
@@ -127,7 +129,7 @@ export default function ViewAllEntries() {
     {} as Record<number, { id: number; name: string }[]>
   );
 
-  const [editEvents, setEditEvents] = useState<{ id: number; name: string; record_format?: 'time' | 'distance' | 'points' | null }[]>([]);
+  const [editEvents, setEditEvents] = useState<{ id: number; name: string; players_per_place?: number; places_count?: number; record_format?: 'time' | 'distance' | 'points' | null }[]>([]);
 
   const openEdit = async (id: number) => {
     setSelectedEntryId(id);

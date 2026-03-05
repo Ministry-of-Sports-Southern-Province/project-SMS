@@ -58,6 +58,24 @@ export const translations = {
       ATHLETIC: 'මලල ක්‍රීඩා',
       GYMNASTIC: 'ජිම්නාස්ටික්',
       SWIMMING: 'පිහිනුම් ක්‍රීඩා',
+      TEAM_GAMES: 'කණ්ඩායම් ක්‍රීඩා',
+      // C-01 through C-08 Combat / Strength Sports
+      Boxing: 'බොක්සිං',
+      Wrestling: 'මල්ලවපොර',
+      Judo: 'ජූඩෝ',
+      'Karate Do': 'කරාතේ ඩෝ',
+      'Weight lifting': 'බර ඉසිලීම',
+      Taikondo: 'ටයිකොන්ඩෝ',
+      'Body building' : 'කායවර්ධන',
+      Wushu : 'වූෂූ',
+
+      // D-01 through D-04 Endurance / Racing Sports
+      'Run across country' : 'හරස් රට දිවීම',
+      'Bicycle racing': 'පාපැදි ධාවනය',
+      Marathon: 'මැරතන්',
+      'Walking' : 'තරග ඇවිදීම',
+  
+
 
       // A-01 ATHLETIC events
       '100m': '100 මීටර්',
@@ -111,9 +129,6 @@ export const translations = {
       '200m individual medley': '200 මීටර් තනි මෙඩ්ලි',
       '50x4 freestyle relay': '50 මීටර් X 4 නිදහස් රිලේ',
       '50x4 medley relay': '50 මීටර් X 4 මෙඩ්ලි රිලේ',
-
-      // B TEAM GAMES category
-      TEAM_GAMES: 'කණ්ඩායම් ක්‍රීඩා',
 
       // B-01 through B-18 TEAM GAMES events
       'B-01': 'කැරම්',
@@ -201,6 +216,7 @@ export const translations = {
       ATHLETIC: 'Athletic',
       GYMNASTIC: 'Gymnastic',
       SWIMMING: 'Swimming',
+      TEAM_GAMES: 'Team Games',
 
       // A-01 ATHLETIC events
       '100m': '100m',
@@ -254,9 +270,6 @@ export const translations = {
       '200m individual medley': '200m Individual Medley',
       '50x4 freestyle relay': '50m X 4 Freestyle Relay',
       '50x4 medley relay': '50m X 4 Medley Relay',
-
-      // B TEAM GAMES category
-      TEAM_GAMES: 'Team Games',
 
       // B-01 through B-18 TEAM GAMES events
       'B-01': 'Carrom',
@@ -344,6 +357,7 @@ export const translations = {
       ATHLETIC: 'தடகளம்',
       GYMNASTIC: 'ஜிம்னாஸ்டிக்ஸ்',
       SWIMMING: 'நீச்சல்',
+      TEAM_GAMES: 'அணி விளையாட்டுகள்',
 
       // A-01 ATHLETIC events
       '100m': '100 மீ',
@@ -397,9 +411,6 @@ export const translations = {
       '200m individual medley': '200 மீ தனி மெட்லி',
       '50x4 freestyle relay': '50 மீ X 4 சுதந்திர ரிலே',
       '50x4 medley relay': '50 மீ X 4 மெட்லி ரிலே',
-
-      // B TEAM GAMES category
-      TEAM_GAMES: 'அணி விளையாட்டுகள்',
 
       // B-01 through B-18 TEAM GAMES events
       'B-01': 'கரோம்',
