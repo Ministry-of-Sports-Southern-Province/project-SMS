@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Box, Paper, Typography, Button, FormControl, InputLabel, Select, MenuItem, Alert, Snackbar } from '@mui/material';
+import { Box, Paper, Typography, Button, FormControl, InputLabel, Select, MenuItem, Alert, Snackbar, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { api } from '../api/client';
 import PlayerCards, { PlayerInput } from '../components/PlayerCards';
+import {Refresh } from '@mui/icons-material';
 
 interface Category {
   id: number;
@@ -286,6 +287,17 @@ export default function ScoreEntryForm() {
     navigate('/view-entries');
   };
 
+  const handleClear = () => {
+    setCategoryId(categories.length > 0 ? categories[0].id : 0);
+    setEventId(0);
+    setGender('male');
+    setPlayers(createEmptyPlayers(3, 1));
+    setError('');
+    setSuccess(false);
+    setSavedId(null);
+    setShowPreview(false);
+  };
+
   const cat = categories.find((c) => c.id === categoryId);
   const evt = events.find((e) => e.id === eventId);
 
@@ -329,6 +341,14 @@ export default function ScoreEntryForm() {
                 )}
               </Select>
             </FormControl>
+           <IconButton 
+                  onClick={handleClear} 
+                  size="small" 
+                  color="primary"
+                  title={t('Refresh')}
+                >
+                  <Refresh />
+                </IconButton>
         </Box>
       </Paper>
 

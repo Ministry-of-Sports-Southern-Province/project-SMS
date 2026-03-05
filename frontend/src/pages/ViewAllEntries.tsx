@@ -20,7 +20,7 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
-import { Edit, Delete, FileDownload } from '@mui/icons-material';
+import { Edit, Delete, FileDownload, Refresh} from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { api, apiBlob } from '../api/client';
 import PlayerCards, { PlayerInput } from '../components/PlayerCards';
@@ -90,6 +90,17 @@ export default function ViewAllEntries() {
     const queryString = params.toString();
     const url = queryString ? `/score-entries?${queryString}` : '/score-entries';
     api<EntryRow[]>(url).then(setRows).catch(console.error);
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      districtId: '',
+      dsOfficeId: '',
+      gender: '',
+      categoryId: '',
+      eventId: '',
+      search: '',
+    });
   };
 
   useEffect(() => {
@@ -291,6 +302,14 @@ export default function ViewAllEntries() {
               ))}
             </Select>
           </FormControl>
+          <IconButton 
+                  onClick={handleClearFilters} 
+                  size="small" 
+                  color="primary"
+                  title={t('Refresh')}
+                >
+                  <Refresh />
+                </IconButton>
           <Button startIcon={<FileDownload />} size="small" onClick={() => handleExport('xlsx')}>
             {t('exportExcel')}
           </Button>

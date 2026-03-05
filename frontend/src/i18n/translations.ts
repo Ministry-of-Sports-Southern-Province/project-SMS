@@ -74,6 +74,8 @@ export const translations = {
       'Bicycle racing': 'පාපැදි ධාවනය',
       Marathon: 'මැරතන්',
       'Walking' : 'තරග ඇවිදීම',
+
+      
   
 
 
