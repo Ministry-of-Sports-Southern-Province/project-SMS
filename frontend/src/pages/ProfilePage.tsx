@@ -360,6 +360,7 @@ export default function ProfilePage() {
             >
               {!profilePic && getInitials(displayName || profile.username)}
             </Avatar>
+            
             <IconButton
               size="small"
               sx={{
@@ -429,6 +430,28 @@ export default function ProfilePage() {
               <DeleteIcon />
             </IconButton>
           )}
+          {bannerImg && (
+              <Button
+                variant="outlined"
+                color="error"
+                size="large"
+                startIcon={<DeleteIcon />}
+                onClick={() => {
+                  setDeleteTarget('banner');
+                  setDeleteDialogOpen(true);
+                }}
+                sx={{
+                  px: 4,
+                  py: 1.2,
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  borderRadius: 1,
+                }}
+              >
+                Remove Banner
+              </Button>
+            )}
         </Box>
 
         {/* Form Section */}
@@ -512,28 +535,7 @@ export default function ProfilePage() {
             >
               {t('save')}
             </Button>
-            {bannerImg && (
-              <Button
-                variant="outlined"
-                color="error"
-                size="large"
-                startIcon={<DeleteIcon />}
-                onClick={() => {
-                  setDeleteTarget('banner');
-                  setDeleteDialogOpen(true);
-                }}
-                sx={{
-                  px: 4,
-                  py: 1.2,
-                  fontSize: '1rem',
-                  fontWeight: 600,
-                  textTransform: 'none',
-                  borderRadius: 1,
-                }}
-              >
-                Remove Banner
-              </Button>
-            )}
+            
           </Box>
         </form>
       </Paper>

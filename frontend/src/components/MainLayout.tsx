@@ -13,6 +13,9 @@ import {
   Select,
   MenuItem,
   FormControl,
+  Avatar,
+  Menu,
+  CircularProgress,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -40,6 +43,36 @@ export default function MainLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(true);
+  const [profileAnchorEl, setProfileAnchorEl] = useState<null | HTMLElement>(null);
+  const profileMenuOpen = Boolean(profileAnchorEl);
+
+  const getInitials = (displayName: string, username: string): string => {
+    const name = displayName || username;
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const handleProfileMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setProfileAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setProfileAnchorEl(null);
+  };
+
+  const handleViewProfile = () => {
+    setProfileAnchorEl(null);
+    navigate('/profile');
+  };
+
+  const handleLogout = () => {
+    setProfileAnchorEl(null);
+    logout();
+  };
 
   const navItems = [
     { path: '/dashboard', label: t('dashboard'), icon: <Dashboard />, adminOnly: true },
@@ -89,9 +122,64 @@ export default function MainLayout() {
               <MenuItem value="ta">தமிழ்</MenuItem>
             </Select>
           </FormControl>
-          <IconButton color="inherit" onClick={logout}>
-            <LogoutIcon />
+
+          {/* Profile Avatar with Dropdown Menu */}
+          <IconButton
+            onClick={handleProfileMenuClick}
+            size="small"
+            sx={{ ml: 2 }}
+            aria-controls={profileMenuOpen ? 'profile-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={profileMenuOpen ? 'true' : undefined}
+          >
+            <Avatar
+              src={(user as any)?.profilePicture}
+              sx={{
+                width: 40,
+                height: 40,
+                bgcolor: 'primary.light',
+                color: 'primary.main',
+                border: '2px solid white',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+              }}
+            >
+              {!user?.displayName && !user?.username ? (
+                <CircularProgress size={24} />
+              ) : (
+                getInitials(user?.displayName || '', user?.username || '')
+              )}
+            </Avatar>
           </IconButton>
+
+          {/* Profile Menu Dropdown */}
+          <Menu
+            id="profile-menu"
+            anchorEl={profileAnchorEl}
+            open={profileMenuOpen}
+            onClose={handleProfileMenuClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <MenuItem disabled sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+              {user?.displayName || user?.username}
+            </MenuItem>
+            <MenuItem onClick={handleViewProfile}>
+              <Person sx={{ mr: 1 }} fontSize="small" />
+              {t('profile')}
+            </MenuItem>
+            <MenuItem onClick={handleLogout}>
+              <LogoutIcon sx={{ mr: 1 }} fontSize="small" />
+              {t('logout')}
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
       <Drawer
