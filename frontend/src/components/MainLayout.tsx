@@ -28,11 +28,12 @@ import {
   LightMode,
   DarkMode,
 } from '@mui/icons-material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useThemeMode } from '../contexts/ThemeContext';
+import { api } from '../api/client';
 
 const drawerWidth = 260;
 

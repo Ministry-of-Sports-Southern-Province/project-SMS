@@ -449,7 +449,7 @@ export default function ProfilePage() {
                   borderRadius: 1,
                 }}
               >
-                Remove Banner
+                
               </Button>
             )}
         </Box>
