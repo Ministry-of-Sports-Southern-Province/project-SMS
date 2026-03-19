@@ -21,8 +21,8 @@ router.post(
 
     // Try username first, then email
     const [rows] = await pool.execute(
-      'SELECT id, username, password_hash, display_name, role, preferred_lang, dark_mode FROM users WHERE username = ? OR email = ?',
-      [username, username]
+    'SELECT id, username, password_hash, display_name, role, preferred_lang, dark_mode, profile_picture FROM users WHERE username = ? OR email = ?',
+    [username, username]
     );
     const users = rows as any[];
     if (!users.length) {
@@ -50,6 +50,7 @@ router.post(
         role: user.role,
         preferredLang: user.preferred_lang,
         darkMode: !!user.dark_mode,
+        profilePicture: user.profile_picture,
       },
     });
   }
@@ -57,8 +58,8 @@ router.post(
 
 router.get('/me', auth, async (req: AuthRequest, res: Response) => {
   const [rows] = await pool.execute(
-    'SELECT id, username, display_name, email, role, preferred_lang, dark_mode FROM users WHERE id = ?',
-    [req.user!.userId]
+  'SELECT id, username, display_name, email, role, preferred_lang, dark_mode, profile_picture FROM users WHERE id = ?',
+  [req.user!.userId]
   );
   const users = rows as any[];
   if (!users.length) return res.status(404).json({ error: 'User not found' });
@@ -71,6 +72,7 @@ router.get('/me', auth, async (req: AuthRequest, res: Response) => {
     role: u.role,
     preferredLang: u.preferred_lang,
     darkMode: !!u.dark_mode,
+    profilePicture: u.profile_picture,
   });
 });
 
