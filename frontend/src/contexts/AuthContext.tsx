@@ -7,6 +7,7 @@ export interface User {
   role: 'admin' | 'user';
   preferredLang?: string;
   darkMode?: boolean;
+  profilePicture?: string;
 }
 
 interface AuthContextType {
@@ -61,6 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       role: data.user.role,
       preferredLang: data.user.preferredLang,
       darkMode: data.user.darkMode,
+      profilePicture: data.user.profilePicture,
     };
     setUserState(u);
     localStorage.setItem(TOKEN_KEY, data.token);
