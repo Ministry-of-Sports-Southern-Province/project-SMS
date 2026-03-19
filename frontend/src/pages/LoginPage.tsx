@@ -51,8 +51,8 @@ const categories = [
         <line x1="8" y1="21" x2="8.5" y2="17.5"/><line x1="16" y1="21" x2="15.5" y2="17.5"/>
       </svg>
     ),
-    label: 'Athletic',
-    desc: 'Track & field events, sprints, hurdles and multi-discipline competitions.',
+    label: 'මලල ක්‍රීඩා',
+    desc: 'ධාවන හා පිම්ම ඉසව්, කෙටි දුර ධාවන, කඩුලු පැනීම සහ බහුවිධ ක්‍රීඩා තරඟ.',
   },
   {
     icon: (
@@ -61,8 +61,8 @@ const categories = [
         <path d="M12 19v-7"/><circle cx="12" cy="20" r="1"/>
       </svg>
     ),
-    label: 'Swimming',
-    desc: 'Pool and open-water races across all strokes and distances.',
+    label: 'පිහිනුම්',
+    desc: 'පිහිනුම් තටාක සහ විවෘත ජලාශ්‍රිතව පැවැත්වෙන සියලුම පිහිනුම් ක්‍රම සහ දුර ප්‍රමාණයන්ගෙන් යුත් තරඟ.',
   },
   {
     icon: (
@@ -70,8 +70,8 @@ const categories = [
         <circle cx="12" cy="4" r="2"/><path d="M9 22V12l-3-4h12l-3 4v10"/><path d="M6 8l-2 3"/><path d="M18 8l2 3"/>
       </svg>
     ),
-    label: 'Gymnastics',
-    desc: 'Artistic, rhythmic and acrobatic disciplines scored by judges.',
+    label: 'ජිම්නාස්ටික්',
+    desc: 'විනිශ්චය මණ්ඩලයක් මගින් ලකුණු ලබා දෙන කලාත්මක, රිද්මයානුකූල සහ ඇක්‍රොබැටික් ක්‍රීඩා ඉසව්.',
   },
   {
     icon: (
@@ -80,8 +80,8 @@ const categories = [
         <line x1="3" y1="12" x2="21" y2="12"/>
       </svg>
     ),
-    label: 'Team Games',
-    desc: 'Football, basketball, volleyball and all collective sport formats.',
+    label: 'කණ්ඩායම් ක්‍රීඩා',
+    desc: 'පාපන්දු, පැසපන්දු, වොලිබෝල් ඇතුළු සියලුම කණ්ඩායම් ක්‍රීඩා ඉසව්.',
   },
 ];
 
@@ -106,17 +106,16 @@ function ScoreTrackLogo({ color = 'hsl(210, 98%, 60%)' }) {
       <Typography
         sx={{
           fontWeight: 700,
-          fontSize: '1.9rem',
+          fontSize: '1.7rem',
           color,
           letterSpacing: '-0.015em',
           fontFamily: 'inherit',
         }}
       >
-        Player Score System
+        ක්‍රීඩක ලකුණු පද්ධතිය
       </Typography>
       
     </Box>
-    
   );
 }
 
