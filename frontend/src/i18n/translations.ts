@@ -53,6 +53,10 @@ export const translations = {
       preview: 'පෙරදසුන',
       confirmDelete: 'මකන ලෙස තහවුරු කරන්න',
       fillAtLeastOne: 'අවම වශයෙන් එක් ස්ථානයක් පුරවන්න. අනෙක් ස්ථාන රික්තව තැබිය හැක.',
+      general: 'සාමාන්‍ය',
+      security: 'ආරක්ෂාව',
+      preferences: 'අභිමතයන්',
+      saveChanges: 'වෙනස්කම් සුරකින්න',
 
       // Sport categories
       ATHLETIC: 'මලල ක්‍රීඩා',
@@ -213,6 +217,11 @@ export const translations = {
       preview: 'Preview',
       confirmDelete: 'Confirm Delete',
       fillAtLeastOne: 'Fill at least one place. You can leave other place cards empty and submit.',
+      general: 'General',
+      security: 'Security',
+      preferences: 'Preferences',
+      saveChanges: 'Save Changes',
+      
 
       // Sport categories
       ATHLETIC: 'Athletic',
@@ -354,6 +363,10 @@ export const translations = {
       preview: 'முன்னோட்டம்',
       confirmDelete: 'நீக்குவதை உறுதிப்படுத்து',
       fillAtLeastOne: 'குறைந்தது ஒரு இடத்தை நிரப்புங்கள். மற்ற இடங்களை வெறுமையாக விட்டு சமர்ப்பிக்கலாம்.',
+      general: 'பொதுவான',
+      security: 'பாதுகாப்பு',
+      preferences: 'விருப்பத்தேர்வுகள்',
+      saveChanges: 'மாற்றங்களைச் சேமிக்கவும்',
 
       // Sport categories
       ATHLETIC: 'தடகளம்',
