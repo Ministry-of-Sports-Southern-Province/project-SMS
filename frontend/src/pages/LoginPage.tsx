@@ -9,7 +9,6 @@ import {
   Alert,
   useMediaQuery,
   useTheme,
-  Link,
   Checkbox,
   FormControlLabel,
 } from '@mui/material';
@@ -26,6 +25,23 @@ const globalStyles = `
     animation: fadeIn 0.5s ease both;
   }
   
+  .category-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+    padding: 12px;
+    border-radius: 12px;
+  }
+  
+  .category-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(8px);
+  }
+
+  .category-card:hover .icon-container {
+    color: hsl(210, 100%, 70%) !important;
+    filter: drop-shadow(0 0 8px hsla(210, 100%, 70%, 0.5));
+  }
+
   /* Smooth scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
@@ -37,12 +53,9 @@ const globalStyles = `
     background: hsla(210, 20%, 50%, 0.3);
     border-radius: 4px;
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: hsla(210, 20%, 50%, 0.5);
-  }
 `;
 
-// ─── Sport categories (replacing MUI's 4 feature items) ──────────────────────
+// ─── Sport categories (6 items organized 3+3) ───────────────────────────────
 const categories = [
   {
     icon: (
@@ -62,7 +75,7 @@ const categories = [
       </svg>
     ),
     label: 'පිහිනුම්',
-    desc: 'පිහිනුම් තටාක සහ විවෘත ජලාශ්‍රිතව පැවැත්වෙන සියලුම පිහිනුම් ක්‍රම සහ දුර ප්‍රමාණයන්ගෙන් යුත් තරඟ.',
+    desc: 'පිහිනුම් තටාක සහ විවෘත ජලාශ්‍රිතව පැවැත්වෙන සියලුම පිහිනුම් ක්‍රම සහ තරඟ.',
   },
   {
     icon: (
@@ -71,7 +84,7 @@ const categories = [
       </svg>
     ),
     label: 'ජිම්නාස්ටික්',
-    desc: 'විනිශ්චය මණ්ඩලයක් මගින් ලකුණු ලබා දෙන කලාත්මක, රිද්මයානුකූල සහ ඇක්‍රොබැටික් ක්‍රීඩා ඉසව්.',
+    desc: 'විනිශ්චය මණ්ඩලයක් මගින් ලකුණු ලබා දෙන කලාත්මක සහ රිද්මයානුකූල ක්‍රීඩා ඉසව්.',
   },
   {
     icon: (
@@ -81,51 +94,51 @@ const categories = [
       </svg>
     ),
     label: 'කණ්ඩායම් ක්‍රීඩා',
-    desc: 'පාපන්දු, පැසපන්දු, වොලිබෝල් ඇතුළු සියලුම කණ්ඩායම් ක්‍රීඩා ඉසව්.',
+    desc: 'පාපන්දු, පැසපන්දු, වොලිබෝල් ඇතුළු සියලුම සාමූහික කණ්ඩායම් ක්‍රීඩා.',
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 18h12M12 12v6M9 12v6M15 12v6M7 12h10l1 1v4l-1 1H7l-1-1v-4l1-1zM12 3v3M9 6v3h6V6"/>
+      </svg>
+    ),
+    label: 'බර පන්ති යටතේ ක්‍රීඩා',
+    desc: 'බොක්සිං, ජූඩෝ සහ කරාතේ ඇතුළු සිරුරේ බර පන්ති අනුව වර්ගීකරණය කළ ක්‍රීඩා.',
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 20V10M14 20V4M10 20V12M6 20V16"/>
+        <path d="M4 21h16"/>
+      </svg>
+    ),
+    label: 'ඇවිදීමේ ක්‍රීඩා',
+    desc: 'නිශ්චිත රිද්මයක් සහ විඳදරාගැනීම පරීක්ෂා කෙරෙන දීර්ඝ දුර ඇවිදීමේ ක්‍රීඩා ඉසව්.',
   },
 ];
 
-// ─── ScoreTrack logo ─────────────────────────────────────────────────────────
 function ScoreTrackLogo({ color = 'hsl(210, 98%, 60%)' }) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
-      <Box
-        sx={{
-          color,
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={{ color, display: 'flex', alignItems: 'center' }}>
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M8 21h8M12 17v4"/>
-          <path d="M7 4H4a1 1 0 0 0-1 1v2a5 5 0 0 0 5 5h0"/>
-          <path d="M17 4h3a1 1 0 0 1 1 1v2a5 5 0 0 1-5 5h0"/>
-          <path d="M6 4h12v7a6 6 0 0 1-12 0V4z"/>
+          <path d="M8 21h8M12 17v4"/><path d="M7 4H4a1 1 0 0 0-1 1v2a5 5 0 0 0 5 5h0"/><path d="M17 4h3a1 1 0 0 1 1 1v2a5 5 0 0 1-5 5h0"/><path d="M6 4h12v7a6 6 0 0 1-12 0V4z"/>
         </svg>
       </Box>
-      <Typography
-        sx={{
-          fontWeight: 700,
-          fontSize: '1.7rem',
-          color,
-          letterSpacing: '-0.015em',
-          fontFamily: 'inherit',
-        }}
-      >
+      <Typography sx={{ fontWeight: 700, fontSize: '1.9rem', color, letterSpacing: '-0.015em' }}>
         ක්‍රීඩක ලකුණු පද්ධතිය
       </Typography>
-      
     </Box>
   );
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
 export default function LoginPage() {
   const { t } = useTranslation();
   const { login } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isLarge = useMediaQuery(theme.breakpoints.up('lg'));
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -165,39 +178,40 @@ export default function LoginPage() {
         alignItems: 'center',
       }}
     >
-      {/* ═══════════════════════════════════════
-          LEFT — Features panel (desktop only)
-          ═══════════════════════════════════════ */}
       {!isMobile && (
         <Box
           sx={{
-            flex: '0 0 auto',
-            width: {md: '400px', lg: '480px'},
+            flex: '1 1 auto',
+            maxWidth: isLarge ? '900px' : '500px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            pl: { md: 4, lg: 6 },
-            pr: { md: 6, lg: 8 },
+            px: { md: 4, lg: 8 },
             py: 6,
           }}
         >
-          {/* Logo */}
           <Box sx={{ mb: 6 }}>
             <ScoreTrackLogo />
           </Box>
 
-          {/* Features list */}
-          <Stack spacing={4}>
+          {/* 6 Categories Grid — Splits to 2 columns on Large screens */}
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: isLarge ? '1fr 1fr' : '1fr',
+              gap: 3,
+            }}
+          >
             {categories.map((cat) => (
-              <Stack key={cat.label} direction="row" spacing={2.5} alignItems="flex-start">
-                {/* Icon */}
+              <Stack key={cat.label} direction="row" spacing={2} className="category-card" alignItems="flex-start">
                 <Box
+                  className="icon-container"
                   sx={{
                     flexShrink: 0,
-                    mt: '3px',
+                    mt: '4px',
                     color: 'hsl(210, 85%, 55%)',
-                    opacity: 0.9,
                     display: 'flex',
+                    transition: 'all 0.3s ease',
                   }}
                 >
                   {cat.icon}
@@ -207,20 +221,18 @@ export default function LoginPage() {
                   <Typography
                     sx={{
                       fontWeight: 600,
-                      fontSize: '1rem',
+                      fontSize: '0.95rem',
                       color: 'hsl(0, 0%, 98%)',
-                      mb: 0.5,
-                      letterSpacing: '-0.01em',
+                      mb: 0.3,
                     }}
                   >
                     {cat.label}
                   </Typography>
                   <Typography
                     sx={{
-                      fontSize: '0.875rem',
+                      fontSize: '0.82rem',
                       color: 'hsl(217, 15%, 65%)',
-                      lineHeight: 1.6,
-                      maxWidth: 380,
+                      lineHeight: 1.5,
                     }}
                   >
                     {cat.desc}
@@ -228,247 +240,77 @@ export default function LoginPage() {
                 </Box>
               </Stack>
             ))}
-          </Stack>
+          </Box>
         </Box>
       )}
 
-      {/* ═══════════════════════════════════════
-          RIGHT — Dark Material sign-in card
-          ═══════════════════════════════════════ */}
-      <Box
-        sx={{
-          flex: '0 1 auto',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          px: { xs: 3, sm: 4, md: 6 },
-          py: 6,
-        }}
-      >
+      {/* Right — Login Card */}
+      <Box sx={{ flex: '0 0 auto', px: { xs: 3, md: 6 }, py: 6 }}>
         <Box
           sx={{
             width: '100%',
+            minWidth: { sm: 400 },
             maxWidth: 440,
             backgroundColor: 'hsl(217, 28%, 23%)',
-            borderRadius: '8px',
+            borderRadius: '12px',
             border: '1px solid hsl(217, 25%, 32%)',
             px: { xs: 3, sm: 4 },
             py: 5,
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
           }}
         >
-          {/* Mobile logo */}
           {isMobile && (
             <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
-              <ScoreTrackLogo color="hsl(210, 98%, 60%)" />
+              <ScoreTrackLogo />
             </Box>
           )}
 
-          {/* Title */}
-          <Typography
-            sx={{
-              fontSize: '2.25rem',
-              fontWeight: 700,
-              color: 'hsl(0, 0%, 100%)',
-              letterSpacing: '-0.02em',
-              mb: 4,
-              lineHeight: 1.2,
-            }}
-          >
+          <Typography sx={{ fontSize: '2.25rem', fontWeight: 700, color: '#fff', mb: 4 }}>
             {t('login')}
           </Typography>
 
           <form onSubmit={handleSubmit}>
-            {error && (
-              <Alert 
-                severity="error" 
-                sx={{ 
-                  mb: 3, 
-                  borderRadius: '6px', 
-                  fontSize: '0.85rem',
-                  backgroundColor: 'hsla(0, 100%, 50%, 0.15)',
-                  color: 'hsl(0, 100%, 75%)',
-                  border: '1px solid hsla(0, 100%, 50%, 0.3)',
-                  '& .MuiAlert-icon': {
-                    color: 'hsl(0, 100%, 75%)',
-                  }
-                }}
-              >
-                {error}
-              </Alert>
-            )}
+            {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
-            {/* Username field */}
-            <Typography
-              component="label"
-              htmlFor="username"
-              sx={{
-                display: 'block',
-                fontSize: '0.8rem',
-                fontWeight: 500,
-                color: 'hsl(217, 20%, 80%)',
-                mb: 0.8,
-                textTransform: 'capitalize',
-              }}
-            >
+            <Typography component="label" sx={{ display: 'block', fontSize: '0.8rem', color: 'hsl(217, 20%, 80%)', mb: 1 }}>
               {t('username')}
             </Typography>
             <TextField
-              id="username"
               fullWidth
-              placeholder="Deepika"
+              size="small"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              required
-              autoFocus
-              size="small"
-              sx={{
-                mb: 2.5,
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '6px',
-                  backgroundColor: 'hsl(217, 35%, 30%)',
-                  fontSize: '0.9rem',
-                  color: 'hsl(0, 0%, 100%)',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    backgroundColor: 'hsl(217, 35%, 32%)',
-                  },
-                  '&.Mui-focused': {
-                    backgroundColor: 'hsl(217, 35%, 30%)',
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'hsl(210, 98%, 48%)',
-                    borderWidth: '2px',
-                  },
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'hsl(217, 25%, 38%)',
-                  transition: 'border-color 0.2s ease',
-                },
-                '& .MuiOutlinedInput-input': {
-                  color: 'hsl(0, 0%, 100%)',
-                  '&::placeholder': {
-                    color: 'hsl(217, 20%, 55%)',
-                    opacity: 0.8,
-                  },
-                },
-              }}
+              sx={{ mb: 3, '& .MuiOutlinedInput-root': { color: '#fff', backgroundColor: 'hsl(217, 35%, 30%)' } }}
             />
 
-            {/* Password field */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.8 }}>
-              <Typography
-                component="label"
-                htmlFor="password"
-                sx={{
-                  fontSize: '0.8rem',
-                  fontWeight: 500,
-                  color: 'hsl(217, 20%, 80%)',
-                  textTransform: 'capitalize',
-                }}
-              >
-                {t('password')}
-              </Typography>
-           
-            </Box>
+            <Typography component="label" sx={{ display: 'block', fontSize: '0.8rem', color: 'hsl(217, 20%, 80%)', mb: 1 }}>
+              {t('password')}
+            </Typography>
             <TextField
-              id="password"
               fullWidth
+              size="small"
               type="password"
-              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
-              size="small"
-              sx={{
-                mb: 2,
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '6px',
-                  backgroundColor: 'hsl(217, 35%, 30%)',
-                  fontSize: '0.9rem',
-                  color: 'hsl(0, 0%, 100%)',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    backgroundColor: 'hsl(217, 35%, 32%)',
-                  },
-                  '&.Mui-focused': {
-                    backgroundColor: 'hsl(217, 35%, 30%)',
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'hsl(210, 98%, 48%)',
-                    borderWidth: '2px',
-                  },
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'hsl(217, 25%, 38%)',
-                  transition: 'border-color 0.2s ease',
-                },
-                '& .MuiOutlinedInput-input': {
-                  color: 'hsl(0, 0%, 100%)',
-                  '&::placeholder': {
-                    color: 'hsl(217, 20%, 55%)',
-                    opacity: 0.8,
-                  },
-                },
-              }}
+              sx={{ mb: 3, '& .MuiOutlinedInput-root': { color: '#fff', backgroundColor: 'hsl(217, 35%, 30%)' } }}
             />
 
-            {/* Remember me checkbox */}
             <FormControlLabel
-              control={
-                <Checkbox
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  size="small"
-                  sx={{
-                    color: 'hsl(217, 25%, 50%)',
-                    '&.Mui-checked': {
-                      color: 'hsl(210, 98%, 60%)',
-                    },
-                  }}
-                />
-              }
-              label={
-                <Typography sx={{ fontSize: '0.85rem', color: 'hsl(217, 20%, 70%)' }}>
-                  Remember me
-                </Typography>
-              }
+              control={<Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} sx={{ color: 'hsl(217, 25%, 50%)' }} />}
+              label={<Typography sx={{ fontSize: '0.85rem', color: 'hsl(217, 20%, 70%)' }}>Remember me</Typography>}
               sx={{ mb: 3 }}
             />
 
-            {/* Sign in button */}
             <Button
               type="submit"
               variant="contained"
               fullWidth
               disabled={loading}
-              sx={{
-                py: 1.4,
-                borderRadius: '6px',
-                fontSize: '0.95rem',
-                fontWeight: 600,
-                textTransform: 'none',
-                letterSpacing: '0.3px',
-                backgroundColor: 'hsl(210, 98%, 48%)',
-                color: '#fff',
-                boxShadow: '0 3px 5px rgba(0, 0, 0, 0.2)',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  backgroundColor: 'hsl(210, 98%, 42%)',
-                  boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
-                },
-                '&.Mui-disabled': {
-                  backgroundColor: 'hsl(210, 60%, 50%)',
-                  color: 'hsl(217, 20%, 70%)',
-                },
-              }}
+              sx={{ py: 1.5, backgroundColor: 'hsl(210, 98%, 48%)', fontWeight: 600 }}
             >
               {loading ? 'Signing in…' : t('login')}
             </Button>
           </form>
-
-
-          {/* Sign up link */}
-         
         </Box>
       </Box>
     </Stack>
