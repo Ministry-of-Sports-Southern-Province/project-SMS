@@ -10,7 +10,7 @@ export const translations = {
       viewAllEntries: 'සියලු ඇතුළත් කිරීම් බලන්න',
       profile: 'පැතිකඩ',
       admin: 'පරිපාලනය',
-      dashboard: 'උපකරණ පුවරුව',
+      dashboard: 'පාලක පුවරුව',
       category: 'ක්‍රීඩා කාණ්ඩය',
       event: 'සිදුවීම',
       gender: 'ස්ත්‍රී පුරුෂ භාවය',
