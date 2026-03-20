@@ -114,13 +114,13 @@ export default function ScoreEntryForm() {
   }, [categoryId]);
 
   useEffect(() => {
-    setEventId(0);
+    setEventId(1);
     setGender('male');
   }, [categoryId]);
 
   useEffect(() => {
     if (eventId && !visibleEvents.some((e) => e.id === eventId)) {
-      setEventId(0);
+      setEventId(1);
     }
   }, [eventId, gender, events]);
 
