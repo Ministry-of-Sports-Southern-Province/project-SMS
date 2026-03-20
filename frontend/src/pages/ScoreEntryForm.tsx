@@ -316,7 +316,7 @@ export default function ScoreEntryForm() {
             <InputLabel>{t('category')}</InputLabel>
             <Select value={categoryId} label={t('category')} onChange={(e) => setCategoryId(Number(e.target.value))}>
               {categories.map((c) => (
-                <MenuItem key={c.id} value={c.id}>{c.code} - {t(c.name)}</MenuItem>
+                <MenuItem key={c.id} value={c.id}>{c.code} - {t(c.code)}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -324,7 +324,7 @@ export default function ScoreEntryForm() {
             <InputLabel>{t('event')}</InputLabel>
             <Select value={eventId} label={t('event')} onChange={(e) => setEventId(Number(e.target.value))} disabled={!categoryId}>
               {visibleEvents.map((e) => (
-                <MenuItem key={e.id} value={e.id}>{t(e.name)}</MenuItem>
+                <MenuItem key={e.id} value={e.id}>{t(e.name.trim())}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -398,8 +398,8 @@ export default function ScoreEntryForm() {
       {showPreview && (
         <Paper sx={{ p: 2, mb: 2 }}>
           <Typography variant="h6" gutterBottom>{t('preview')}</Typography>
-          <Typography>{t('category')}: {cat?.code} - {cat ? t(cat.name) : ''}</Typography>
-          <Typography>{t('event')}: {evt ? t(evt.name) : ''}, {t('gender')}: {t(gender)}</Typography>
+          <Typography>{t('category')}: {cat?.code} - {cat ? t(cat.code) : ''}</Typography>
+          <Typography>{t('event')}: {evt ? t(evt.name.trim()) : ''}, {t('gender')}: {t(gender)}</Typography>
           <Typography variant="body2" color="text.secondary">Places to be saved: {getFilledPlayers().length}</Typography>
           {getFilledPlayers().slice(0, 8).map((p, i) => (
             <Typography key={i} variant="body2">{p.place}: {p.playerName} - {p.certificateNo}</Typography>

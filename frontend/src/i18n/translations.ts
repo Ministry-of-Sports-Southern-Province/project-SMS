@@ -1,6 +1,7 @@
 export const translations = {
   si: {
     translation: {
+      // --- General UI ---
       appTitle: 'දකුණු පළාත් ක්‍රීඩා ප්‍රතිඵල පද්ධතිය',
       login: 'පිවිසෙන්න',
       logout: 'පිටවන්න',
@@ -58,32 +59,25 @@ export const translations = {
       preferences: 'අභිමතයන්',
       saveChanges: 'වෙනස්කම් සුරකින්න',
 
-      // Sport categories
-      ATHLETIC: 'මලල ක්‍රීඩා',
-      GYMNASTIC: 'ජිම්නාස්ටික්',
-      SWIMMING: 'පිහිනුම් ක්‍රීඩා',
-      TEAM_GAMES: 'කණ්ඩායම් ක්‍රීඩා',
-      // C-01 through C-08 Combat / Strength Sports
-      Boxing: 'බොක්සිං',
-      Wrestling: 'මල්ලවපොර',
-      Judo: 'ජූඩෝ',
-      'Karate Do': 'කරාතේ ඩෝ',
-      'Weight lifting': 'බර ඉසිලීම',
-      Taikondo: 'ටයිකොන්ඩෝ',
-      'Body building' : 'කායවර්ධන',
-      Wushu : 'වූෂූ',
+      // --- Sport Categories (Using DB Codes as Keys) ---
+      'A-01': 'මලල ක්‍රීඩා',
+      'A-02': 'ජිම්නාස්ටික්',
+      'A-03': 'පිහිනුම් ක්‍රීඩා',
+      'B': 'කණ්ඩායම් ක්‍රීඩා',
+      'C-01': 'බොක්සිං',
+      'C-02': 'මල්ලවපොර',
+      'C-03': 'ජූඩෝ',
+      'C-04': 'කරාතේ ඩෝ',
+      'C-05': 'බර ඉසිලීම',
+      'C-06': 'ටයිකොන්ඩෝ',
+      'C-07': 'කායවර්ධන',
+      'C-08': 'වූෂූ',
+      'D-01': 'හරස් රට දිවීම',
+      'D-02': 'පාපැදි ධාවනය',
+      'D-03': 'මැරතන්',
+      'D-04': 'තරග ඇවිදීම',
 
-      // D-01 through D-04 Endurance / Racing Sports
-      'Run across country' : 'හරස් රට දිවීම',
-      'Bicycle racing': 'පාපැදි ධාවනය',
-      Marathon: 'මැරතන්',
-      'Walking' : 'තරග ඇවිදීම',
-
-      
-  
-
-
-      // A-01 ATHLETIC events
+      // --- A-01 ATHLETIC events ---
       '100m': '100 මීටර්',
       '200m': '200 මීටර්',
       '400m': '400 මීටර්',
@@ -106,7 +100,7 @@ export const translations = {
       'javelin throw': 'භාල එල්ලීම',
       'hammer throw': 'හැමර් එල්ලීම',
 
-      // A-02 GYMNASTIC events
+      // --- A-02 GYMNASTIC events ---
       'floor exercise': 'භූමි අභ්‍යාසය',
       'vaulting table': 'වෝල්ටිං මේසය',
       'high bar': 'උස දණ්ඩ',
@@ -116,7 +110,7 @@ export const translations = {
       'balance beam': 'සමතුලිත පීලි',
       'uneven bars': 'අසමාන්තර දණ්ඩ',
 
-      // A-03 SWIMMING events
+      // --- A-03 SWIMMING events ---
       '50m freestyle': '50 මීටර් නිදහස්',
       '50m breaststroke': '50 මීටර් බ්‍රෙස්ට්ස්ට්‍රෝක්',
       '50m backstroke': '50 මීටර් බැක්ස්ට්‍රෝක්',
@@ -136,7 +130,7 @@ export const translations = {
       '50x4 freestyle relay': '50 මීටර් X 4 නිදහස් රිලේ',
       '50x4 medley relay': '50 මීටර් X 4 මෙඩ්ලි රිලේ',
 
-      // B-01 through B-18 TEAM GAMES events
+      // --- B-01 through B-18 TEAM GAMES events ---
       'B-01': 'කැරම්',
       'B-02': 'චෙස්',
       'B-03': 'කඹ ඇදීම',
@@ -165,6 +159,7 @@ export const translations = {
   },
   en: {
     translation: {
+      // --- General UI ---
       appTitle: 'Southern Province Sports Score System',
       login: 'Login',
       logout: 'Logout',
@@ -221,15 +216,26 @@ export const translations = {
       security: 'Security',
       preferences: 'Preferences',
       saveChanges: 'Save Changes',
-      
 
-      // Sport categories
-      ATHLETIC: 'Athletic',
-      GYMNASTIC: 'Gymnastic',
-      SWIMMING: 'Swimming',
-      TEAM_GAMES: 'Team Games',
+      // --- Sport Categories (Using DB Codes as Keys) ---
+      'A-01': 'Athletic',
+      'A-02': 'Gymnastic',
+      'A-03': 'Swimming',
+      'B': 'Team Games',
+      'C-01': 'Boxing',
+      'C-02': 'Wrestling',
+      'C-03': 'Judo',
+      'C-04': 'Karate Do',
+      'C-05': 'Weight lifting',
+      'C-06': 'Taekwondo',
+      'C-07': 'Body building',
+      'C-08': 'Wushu',
+      'D-01': 'Run across country',
+      'D-02': 'Bicycle racing',
+      'D-03': 'Marathon',
+      'D-04': 'Walking',
 
-      // A-01 ATHLETIC events
+      // --- A-01 ATHLETIC events ---
       '100m': '100m',
       '200m': '200m',
       '400m': '400m',
@@ -252,7 +258,7 @@ export const translations = {
       'javelin throw': 'Javelin throw',
       'hammer throw': 'Hammer throw',
 
-      // A-02 GYMNASTIC events
+      // --- A-02 GYMNASTIC events ---
       'floor exercise': 'Floor exercise',
       'vaulting table': 'Vaulting table',
       'high bar': 'High bar',
@@ -262,7 +268,7 @@ export const translations = {
       'balance beam': 'Balance beam',
       'uneven bars': 'Uneven bars',
 
-      // A-03 SWIMMING events
+      // --- A-03 SWIMMING events ---
       '50m freestyle': '50m Freestyle',
       '50m breaststroke': '50m Breaststroke',
       '50m backstroke': '50m Backstroke',
@@ -282,7 +288,7 @@ export const translations = {
       '50x4 freestyle relay': '50m X 4 Freestyle Relay',
       '50x4 medley relay': '50m X 4 Medley Relay',
 
-      // B-01 through B-18 TEAM GAMES events
+      // --- B-01 through B-18 TEAM GAMES events ---
       'B-01': 'Carrom',
       'B-02': 'Chess',
       'B-03': 'Tug of War',
@@ -311,6 +317,7 @@ export const translations = {
   },
   ta: {
     translation: {
+      // --- General UI ---
       appTitle: 'தெற்கு மாகாண விளையாட்டு மதிப்பெண் அமைப்பு',
       login: 'உள்நுழை',
       logout: 'வெளியேறு',
@@ -368,13 +375,25 @@ export const translations = {
       preferences: 'விருப்பத்தேர்வுகள்',
       saveChanges: 'மாற்றங்களைச் சேமிக்கவும்',
 
-      // Sport categories
-      ATHLETIC: 'தடகளம்',
-      GYMNASTIC: 'ஜிம்னாஸ்டிக்ஸ்',
-      SWIMMING: 'நீச்சல்',
-      TEAM_GAMES: 'அணி விளையாட்டுகள்',
+      // --- Sport Categories (Using DB Codes as Keys) ---
+      'A-01': 'தடகளம்',
+      'A-02': 'ஜிம்னாஸ்டிக்ஸ்',
+      'A-03': 'நீச்சல்',
+      'B': 'அணி விளையாட்டுகள்',
+      'C-01': 'Boxing',           // Placeholder, update with Tamil later
+      'C-02': 'Wrestling',        // Placeholder, update with Tamil later
+      'C-03': 'Judo',             // Placeholder, update with Tamil later
+      'C-04': 'Karate Do',        // Placeholder, update with Tamil later
+      'C-05': 'Weight lifting',   // Placeholder, update with Tamil later
+      'C-06': 'Taekwondo',        // Placeholder, update with Tamil later
+      'C-07': 'Body building',    // Placeholder, update with Tamil later
+      'C-08': 'Wushu',            // Placeholder, update with Tamil later
+      'D-01': 'Run across country', // Placeholder, update with Tamil later
+      'D-02': 'Bicycle racing',   // Placeholder, update with Tamil later
+      'D-03': 'Marathon',         // Placeholder, update with Tamil later
+      'D-04': 'Walking',          // Placeholder, update with Tamil later
 
-      // A-01 ATHLETIC events
+      // --- A-01 ATHLETIC events ---
       '100m': '100 மீ',
       '200m': '200 மீ',
       '400m': '400 மீ',
@@ -397,7 +416,7 @@ export const translations = {
       'javelin throw': 'ஈட்டி எறிதல்',
       'hammer throw': 'சுத்தி எறிதல்',
 
-      // A-02 GYMNASTIC events
+      // --- A-02 GYMNASTIC events ---
       'floor exercise': 'தரைப் பயிற்சி',
       'vaulting table': 'வால்டிங் மேசை',
       'high bar': 'உயர் தண்டு',
@@ -407,7 +426,7 @@ export const translations = {
       'balance beam': 'சமநிலை கம்பி',
       'uneven bars': 'ஒற்றுமையற்ற தண்டுகள்',
 
-      // A-03 SWIMMING events
+      // --- A-03 SWIMMING events ---
       '50m freestyle': '50 மீ சுதந்திரம்',
       '50m breaststroke': '50 மீ மார்பு',
       '50m backstroke': '50 மீ முதுகு',
@@ -427,7 +446,7 @@ export const translations = {
       '50x4 freestyle relay': '50 மீ X 4 சுதந்திர ரிலே',
       '50x4 medley relay': '50 மீ X 4 மெட்லி ரிலே',
 
-      // B-01 through B-18 TEAM GAMES events
+      // --- B-01 through B-18 TEAM GAMES events ---
       'B-01': 'கரோம்',
       'B-02': 'செஸ்',
       'B-03': 'கயிறு இழுத்தல்',
