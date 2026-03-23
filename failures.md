@@ -23,4 +23,5 @@ today commit-t
 today commit-t
 today commit-t
 today commit-t  Need to fix minor bugs  
+update system include district wise medle tally with points given 
 
