@@ -13,7 +13,7 @@ import profileRoutes from './routes/profile';
 const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://your-vercel-url.vercel.app', // add after Vercel deploy
+  'https://project-sms-two.vercel.app', // add after Vercel deploy
   'https://sms-app.sportsdpsp.lk',      // add after custom domain
 ];
 
