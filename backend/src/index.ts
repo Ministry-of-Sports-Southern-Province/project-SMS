@@ -11,8 +11,22 @@ import adminRoutes from './routes/admin';
 import profileRoutes from './routes/profile';
 
 const app = express();
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://your-vercel-url.vercel.app', // add after Vercel deploy
+  'https://sms-app.sportsdpsp.lk',      // add after custom domain
+];
 
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);

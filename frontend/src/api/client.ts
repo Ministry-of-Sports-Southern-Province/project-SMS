@@ -1,4 +1,6 @@
+const BASE_URL = import.meta.env.VITE_API_BASE || '';
 const TOKEN_KEY = 'sms_token';
+
 
 function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
@@ -17,7 +19,7 @@ export async function api<T>(
     (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
   }
 
-  const res = await fetch(path.startsWith('http') ? path : `/api${path}`, {
+  const res = await fetch(path.startsWith('http') ? path : `${BASE_URL}/api${path}`, {
     ...options,
     headers,
   });
@@ -33,7 +35,7 @@ export async function api<T>(
 
 export async function apiBlob(path: string, params?: Record<string, string>): Promise<Blob> {
   const token = getToken();
-  const url = new URL(path.startsWith('http') ? path : `/api${path}`, window.location.origin);
+  const url = new URL(path.startsWith('http') ? path : `${BASE_URL}/api${path}`, window.location.origin);
   if (params) Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
   const res = await fetch(url.toString(), {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
