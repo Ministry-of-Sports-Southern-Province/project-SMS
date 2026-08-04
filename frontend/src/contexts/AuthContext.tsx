@@ -44,16 +44,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {
+    // #region agent log
+    fetch('http://127.0.0.1:7935/ingest/419cad35-8db2-43a6-a3d6-91a89eeb3d18',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'fc5c8f'},body:JSON.stringify({sessionId:'fc5c8f',runId:'pre-fix',hypothesisId:'A',location:'AuthContext.tsx:login',message:'login attempt start',data:{username,origin:window.location.origin,port:window.location.port,href:window.location.href},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
     });
+    // #region agent log
+    fetch('http://127.0.0.1:7935/ingest/419cad35-8db2-43a6-a3d6-91a89eeb3d18',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'fc5c8f'},body:JSON.stringify({sessionId:'fc5c8f',runId:'pre-fix',hypothesisId:'A',location:'AuthContext.tsx:login:response',message:'login fetch response',data:{ok:res.ok,status:res.status,statusText:res.statusText,url:res.url},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
+      // #region agent log
+      fetch('http://127.0.0.1:7935/ingest/419cad35-8db2-43a6-a3d6-91a89eeb3d18',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'fc5c8f'},body:JSON.stringify({sessionId:'fc5c8f',runId:'pre-fix',hypothesisId:'B',location:'AuthContext.tsx:login:error',message:'login failed',data:{status:res.status,error:data.error||null,errors:data.errors||null},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
       throw new Error(data.error || 'Login failed');
     }
     const data = await res.json();
+    // #region agent log
+    fetch('http://127.0.0.1:7935/ingest/419cad35-8db2-43a6-a3d6-91a89eeb3d18',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'fc5c8f'},body:JSON.stringify({sessionId:'fc5c8f',runId:'pre-fix',hypothesisId:'C',location:'AuthContext.tsx:login:success',message:'login success',data:{userId:data.user?.id,username:data.user?.username,role:data.user?.role},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     setToken(data.token);
     const u = {
       id: data.user.id,
